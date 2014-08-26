@@ -12,21 +12,10 @@ public class PlayersMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (Input.GetKeyDown("up")) {		
-			rigidbody.AddForce(Vector3.forward * flickStrenght);
-		}
-		if (Input.GetKeyDown("down")) {		
-			rigidbody.AddForce(Vector3.back * flickStrenght);
-		}
-		if (Input.GetKeyDown("left")) {		
-			rigidbody.AddForce(Vector3.left * flickStrenght);
-		}
-		if (Input.GetKeyDown("right")) {		
-			rigidbody.AddForce(Vector3.right * flickStrenght);
-		}
+
 		
 		LimitVelocity ();
-		Debug.Log (rigidbody.velocity);
+		//ouchDebug.Log (rigidbody.velocity);
 	}
 
 	void LimitVelocity(){
@@ -35,7 +24,7 @@ public class PlayersMovement : MonoBehaviour {
 		}
 	}
 
-	void GetControl(){
-
+	public void ApplyForce(Vector2 dir){
+		rigidbody.AddForce(new Vector3(dir.x,0,-dir.y) * flickStrenght);
 	}
 }
