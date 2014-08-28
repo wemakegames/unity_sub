@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class PlayersMovement : MonoBehaviour {
-	public float flickStrenght;
+	public float flickStrenghtTouch;
+	public float flickStrenghtMouse;
 	public float maxSpeed;
 
 	// Use this for initialization
@@ -24,7 +25,11 @@ public class PlayersMovement : MonoBehaviour {
 		}
 	}
 
-	public void ApplyForce(Vector2 dir){
-		rigidbody.AddForce(new Vector3(dir.x,0,-dir.y) * flickStrenght);
+	public void ApplyForce(Vector2 dir, string platform){
+		if (platform == "touch") {
+			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * flickStrenghtTouch);
+		} else if (platform == "mouse") {
+			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * flickStrenghtMouse);
+		}
 	}
 }

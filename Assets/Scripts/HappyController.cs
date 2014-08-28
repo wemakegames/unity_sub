@@ -4,7 +4,7 @@ using HappyFunTimes;
 
 public class HappyController : MonoBehaviour {
 
-	public PlayersMovement playerMovement;
+	private PlayersMovement playerMovement;
 
 	[CmdName("pad")]
 	class MessagePad : HappyFunTimes.MessageCmdData {
@@ -14,7 +14,7 @@ public class HappyController : MonoBehaviour {
 
 	[CmdName("swipe")]
 	class MessageSwipe : HappyFunTimes.MessageCmdData {
-		public string swipe;
+		public string platform;
 		public int startX;
 		public int startY;
 		public int endX;
@@ -73,9 +73,11 @@ public class HappyController : MonoBehaviour {
 		Vector2 endPos = new Vector2(data.endX,data.endY);
 
 
-		Debug.Log ("start   " + data.startX + " , " + data.startY + "     " + "end   " + data.endX + " , " + data.endY);
-		Vector2 dir = endPos - startPos; 
-		playerMovement.ApplyForce (dir);
+		//Debug.Log ("start   " + data.startX + " , " + data.startY + "     " + "end   " + data.endX + " , " + data.endY);
+		Debug.Log (data.platform);
+		Vector2 dir = endPos - startPos;
+		string platform = data.platform;
+		playerMovement.ApplyForce (dir, platform);
 	}
 
 	void OnPad(MessagePad data) {

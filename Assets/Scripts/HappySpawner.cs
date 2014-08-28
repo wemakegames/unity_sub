@@ -8,6 +8,10 @@ public class HappySpawner : MonoBehaviour {
 
 	GameServer server;
 	int playerCount;
+	private bool nextTeam = false;
+
+	public Color team1Color;
+	public Color team2Color;
 
 	// Use this for initialization
 	void Start () {
@@ -41,9 +45,20 @@ public class HappySpawner : MonoBehaviour {
 		// Spawn a new player then add a script to it.
 		var go = (GameObject)Instantiate(PrefabToSpawnForPlayer, spawnPosition, transform.rotation);
 
+		AssignPlayerToTeam (go);
+
 		// Get the Example3rdPersonController script to this object.
 		var player = go.GetComponent<HappyController>();
 		player.Init(e.netPlayer, "Player" + (++playerCount));
+	}
+
+	void AssignPlayerToTeam (GameObject player){
+			if (nextTeam == false) {
+					player.GetComponent<Renderer> ().material.color = team1Color;
+			} else {
+					player.GetComponent<Renderer> ().material.color = team2Color;
+			}
+		nextTeam = !nextTeam;
 	}
 	
 	void Connected(object sender, System.EventArgs e) {
