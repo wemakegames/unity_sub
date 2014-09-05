@@ -25,11 +25,40 @@ public class PlayersMovement : MonoBehaviour {
 		}
 	}
 
-	public void ApplyForce(Vector2 dir, string platform){
+	public void ApplyForce(Vector2 startPos, Vector2 endPos, float duration, string platform){
+
+		Vector2 dir = CalcDirection (startPos, endPos);
+		float dist = CalcSwipeDistance (startPos, endPos);
+		float strength = CalcStrength (dist, duration, platform);
+
+
+		rigidbody.AddForce (new Vector3(dir.x, 0, -dir.y) * strength);
+
+	}
+
+	Vector2 CalcDirection(Vector2 s, Vector2 e){
+		Vector2 dir = e-s;
+		return dir; 
+	}
+
+
+	float CalcSwipeDistance(Vector2 s, Vector2 e){
+		float xd = e.x - s.x;
+		float yd = e.y - s.y;
+		float dist = Mathf.Sqrt(Mathf.Pow(xd,2) + Mathf.Pow(yd,2));
+		return dist;
+	}
+
+	float CalcStrength (float d, float t, string platform){
+		float strength;
+
+		strength = d / t;
+		Debug.Log (strength);
 		if (platform == "touch") {
-			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * flickStrenghtTouch);
+			strength *= flickStrenghtTouch;
 		} else if (platform == "mouse") {
-			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * flickStrenghtMouse);
+			strength *= flickStrenghtMouse;
 		}
+		return strength;
 	}
 }

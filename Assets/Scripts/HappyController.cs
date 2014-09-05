@@ -19,6 +19,7 @@ public class HappyController : MonoBehaviour {
 		public int startY;
 		public int endX;
 		public int endY;
+		public float duration;
 
 	};
 	
@@ -72,12 +73,7 @@ public class HappyController : MonoBehaviour {
 		Vector2 startPos = new Vector2(data.startX,data.startY);
 		Vector2 endPos = new Vector2(data.endX,data.endY);
 
-
-		//Debug.Log ("start   " + data.startX + " , " + data.startY + "     " + "end   " + data.endX + " , " + data.endY);
-		Debug.Log (data.platform);
-		Vector2 dir = endPos - startPos;
-		string platform = data.platform;
-		playerMovement.ApplyForce (dir, platform);
+		playerMovement.ApplyForce (startPos, endPos, data.duration, data.platform);
 	}
 
 	void OnPad(MessagePad data) {
