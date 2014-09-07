@@ -5,10 +5,11 @@ public class PlayersMovement : MonoBehaviour {
 	public float flickStrenghtTouch;
 	public float flickStrenghtMouse;
 	public float maxSpeed;
+	public bool canPlay;
 
 	// Use this for initialization
 	void Start () {
-	
+		canPlay = true;
 	}
 	
 	// Update is called once per frame
@@ -26,13 +27,14 @@ public class PlayersMovement : MonoBehaviour {
 	}
 
 	public void ApplyForce(Vector2 startPos, Vector2 endPos, float duration, string platform){
+		if (canPlay) {
+			Vector2 dir = CalcDirection (startPos, endPos);
+			float dist = CalcSwipeDistance (startPos, endPos);
+			float strength = CalcStrength (dist, duration, platform);
 
-		Vector2 dir = CalcDirection (startPos, endPos);
-		float dist = CalcSwipeDistance (startPos, endPos);
-		float strength = CalcStrength (dist, duration, platform);
 
-
-		rigidbody.AddForce (new Vector3(dir.x, 0, -dir.y) * strength);
+			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * strength);
+		}
 
 	}
 
