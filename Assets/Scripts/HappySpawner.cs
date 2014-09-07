@@ -7,8 +7,8 @@ public class HappySpawner : MonoBehaviour {
 	public GameObject PrefabToSpawnForPlayer;
 
 	GameServer server;
-	int playerCount;
-	private bool nextTeam = false;
+	public int playerCount;
+
 
 	public Color team1Color;
 	public Color team2Color;
@@ -53,12 +53,13 @@ public class HappySpawner : MonoBehaviour {
 	}
 
 	void AssignPlayerToTeam (GameObject player){
-			if (nextTeam == false) {
-					player.GetComponent<Renderer> ().material.color = team1Color;
+			if (playerCount % 2 == 0) {
+				player.GetComponent<Renderer> ().material.color = team1Color;
+				player.tag = "playerTeam1";
 			} else {
-					player.GetComponent<Renderer> ().material.color = team2Color;
+				player.GetComponent<Renderer> ().material.color = team2Color;
+				player.tag = "playerTeam2";
 			}
-		nextTeam = !nextTeam;
 	}
 	
 	void Connected(object sender, System.EventArgs e) {

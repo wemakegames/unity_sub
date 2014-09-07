@@ -5,8 +5,9 @@ TagManager:
   tags:
   - GoalBlue
   - GoalRed
-  - 
   - NetPlayers
+  - playerTeam1
+  - playerTeam2
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

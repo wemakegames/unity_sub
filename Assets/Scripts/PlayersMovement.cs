@@ -7,17 +7,15 @@ public class PlayersMovement : MonoBehaviour {
 	public float maxSpeed;
 	public bool canPlay;
 
+
 	// Use this for initialization
 	void Start () {
-		canPlay = true;
+		canPlay = false;
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-
-		
+	void FixedUpdate () {		
 		LimitVelocity ();
-		//ouchDebug.Log (rigidbody.velocity);
 	}
 
 	void LimitVelocity(){
@@ -34,6 +32,7 @@ public class PlayersMovement : MonoBehaviour {
 
 
 			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * strength);
+			canPlay = false;
 		}
 
 	}
@@ -55,7 +54,6 @@ public class PlayersMovement : MonoBehaviour {
 		float strength;
 
 		strength = d / t;
-		Debug.Log (strength);
 		if (platform == "touch") {
 			strength *= flickStrenghtTouch;
 		} else if (platform == "mouse") {
