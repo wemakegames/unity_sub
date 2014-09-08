@@ -4,10 +4,11 @@ using System.Collections;
 public class SoundManager : MonoBehaviour {
 
 	public AudioClip sndGoal;
+	public AudioClip sndBallHit;
 
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
@@ -22,6 +23,11 @@ public class SoundManager : MonoBehaviour {
 		{
 			case ("goal"):
 			clip = sndGoal;
+			break;
+
+			case ("BallHit"):
+
+			clip = sndBallHit;
 			break;
 		
 			default:

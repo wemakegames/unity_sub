@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
 	private bool announcingTurn;
 	private Text redCounter;
 	private Text blueCounter;
-	private bool currentTurn;   //false is team one, true is team 2
+	private string currentTurn;   //false is team one, true is team 2
 	private bool goToNextTurn;
 	private SoundManager soundManager;
 
@@ -26,13 +26,13 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		announcingTurn = false;
 		goToNextTurn = false;
-		currentTurn = false;
+		currentTurn = "start";
 		turnCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
 		blueCounter = GameObject.Find ("CounterBlueText").GetComponent<Text>();
 		soundManager = GetComponent<SoundManager> ();
-		soundManager.PlaySound ("goal");
+		//soundManager.PlaySound ("goal");
 
 		turnAnnouncerContainer = GameObject.Find ("TurnAnnouncer");
 		turnAnnouncerContainer.SetActive(false);
@@ -59,10 +59,10 @@ public class GameManager : MonoBehaviour {
 		team1 = GameObject.FindGameObjectsWithTag("playerTeam1");
 		team2 = GameObject.FindGameObjectsWithTag("playerTeam2");
 
-		if (currentTurn == false){
+		if (currentTurn == "team1" || currentTurn =="start"){
 			activeTeam = team1;
 			UpdateTurnCounter(1);
-		} else if (currentTurn == true){
+		} else if (currentTurn == "team2"){
 			activeTeam = team2;
 			UpdateTurnCounter(2);
 		}
@@ -100,15 +100,21 @@ public class GameManager : MonoBehaviour {
 		string t = "";
 		Color c = Color.black;
 		switch (currentTurn) {
-			case true:
-				c = Color.blue;
-				t = "blue team!";
-				break;
 
-			case false:
-				c = Color.red;
-				t = "red team!";
-				break;
+		case "start":
+			c = Color.white;
+			t = "MATCH START!";
+			break;
+
+		case "team1":
+			c = Color.red;
+			t = "red team!";
+			break;
+
+		case "team2":
+			c = Color.blue;
+			t = "blue team!";
+			break;
 		}
 
 		turnAnnouncer.color = c;
@@ -118,7 +124,13 @@ public class GameManager : MonoBehaviour {
 
 		turnAnnouncerContainer.SetActive(false);
 		goToNextTurn = true;
-		currentTurn = !currentTurn;
+		if (currentTurn == "team2" || currentTurn == "start") {
+			currentTurn = "team1";
+		} else {
+			currentTurn = "team2";
+		}
+		
+
 		announcingTurn = !announcingTurn;
 
 	}

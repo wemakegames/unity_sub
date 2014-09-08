@@ -22,11 +22,29 @@ public class BallEvents : MonoBehaviour {
 	void OnTriggerEnter(Collider collision) {
 		if (collision.transform.tag == "GoalBlue") {
 			gameManager.IncreaseGoalCount("IncreaseRed");
+			StartCoroutine (CenterBall ());
 	
 		} else if (collision.transform.tag == "GoalRed") {
 			gameManager.IncreaseGoalCount("IncreaseBlue");
+			StartCoroutine (CenterBall ());
 		}
-		StartCoroutine (CenterBall ());
+	}
+
+	void OnCollisionEnter(Collision collision) {
+		if (collision.transform.tag == "playerTeam1" || collision.transform.tag == "playerTeam2"){
+			Debug.Log("baball");
+
+			Vector3 vF = collision.rigidbody.velocity;
+			float i;
+			if (vF.x > vF.z){
+				i = vF.x;
+			}else{
+				i = vF.z;
+			}
+			soundManager.PlaySound ("BallHit");
+			rigidbody.AddForce (new Vector3 (0, i, 0)* 50);
+			
+		}
 	}
 
 	IEnumerator CenterBall() {
