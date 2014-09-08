@@ -35,15 +35,19 @@ function handleDeath() {
 var canvas = document.getElementById('canvas');
 var click = false;
 var startPos;
+var endPos;
 var lastTime;
 var newTime;  
   
-canvas.addEventListener("touchstart", handleStart, false);
-canvas.addEventListener("touchend", handleEnd, false);
 
 function writeMessage(message) {    
   document.getElementById("debugtext").innerHTML = message;            
 }
+
+
+canvas.addEventListener("touchstart", handleStart, false);
+canvas.addEventListener("touchend", handleEnd, false);
+
 
 function getTouchPos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
@@ -63,7 +67,6 @@ function handleStart(evt) {
 
 function handleEnd(evt) {   
 
-
   evt.preventDefault(); //prvent mouse movement
   newTime = Date.now();
 
@@ -79,9 +82,34 @@ function handleEnd(evt) {
 
 
 //start of implementation for mouse to test in browser  
-canvas.addEventListener("mouseup",function(){
+
+canvas.addEventListener("mousedown",function(evt){
+  var mousePos = getMousePos(canvas,evt);
+  startPos = mousePos;
+  lastTime = Date.now();
+  click = true;
+  writeMessage("DOWN");
+
+});
+canvas.addEventListener("mouseup",function(evt){
+  newTime = Date.now();
+
+
+  var totalTime = newTime - lastTime;  
+  var mousePos = getMousePos(canvas,evt);
+  endPos = mousePos;
+  writeMessage("UP");
+
+  var message = "X:  " + startPos.x + "   Y:  " + startPos.y + "      X:  " + endPos.x + "   Y:  " + endPos.y + '   Time:   ' + totalTime;
+  
+  writeMessage(message);
+  
+  g_client.sendCmd('swipe',{ platform: "mouse" , startX: startPos.x, startY: startPos.y, endX: endPos.x, endY: endPos.y, duration: totalTime});
   click = false;
 });
+
+
+
 function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
   return {
