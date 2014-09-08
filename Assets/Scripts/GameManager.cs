@@ -139,11 +139,14 @@ public class GameManager : MonoBehaviour {
 	void UpdateTurnCounter(int team){
 		switch (team) {
 			case 1:
-				turnCounter.text = "Team 1";
-				break;
+			turnCounter.text = "Team 1";
+			turnCounter.color = Color.blue;
+			break;
+
 			case 2:
-				turnCounter.text = "Team 2";
-				break;
+			turnCounter.text = "Team 2";
+			turnCounter.color = Color.red;
+			break;
 		}
 	}
 
