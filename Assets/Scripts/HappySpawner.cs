@@ -16,8 +16,6 @@ public class HappySpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		var options = new GameServer.Options();
-		options.gameId = "subbuteo";
-		options.controllerUrl = "http://localhost:8080/examples/subbuteo/index.html";
 
 		server = new GameServer(options, gameObject);
 		server.OnPlayerConnect += StartNewPlayer;
@@ -68,6 +66,7 @@ public class HappySpawner : MonoBehaviour {
 	
 	void Disconnected(object sender, System.EventArgs e) {
 		Debug.Log("HappySpawner:Disconnected");
+		Application.Quit();
 	}
 	
 	void Cleanup() {
