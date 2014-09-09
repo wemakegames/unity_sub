@@ -1,16 +1,16 @@
 "use strict";
 
 var main = function(
+    CommonUI,
     GameClient,
-    AudioManager,
     DPad,
-    ExampleUI,
     Input,
     Misc,
     MobileHacks,
-    Touch) {
-var g_client;
-var g_audioManager;
+    Touch,
+    AudioManager) {
+  var g_client;
+  var g_audioManager;
 
 var globals = {
     debug: false,
@@ -22,6 +22,7 @@ function $(id) {
   return document.getElementById(id);
 }
 
+console.log( "Create new GameClient" );
 g_client = new GameClient({
   gameId: "subbuteo",
 });
@@ -37,11 +38,11 @@ var click = false;
 var startPos;
 var endPos;
 var lastTime;
-var newTime;  
-  
+var newTime;
 
-function writeMessage(message) {    
-  document.getElementById("debugtext").innerHTML = message;            
+
+function writeMessage(message) {
+  document.getElementById("debugtext").innerHTML = message;
 }
 
 
@@ -57,7 +58,7 @@ function getTouchPos(canvas, evt) {
   };
 }
 
-function handleStart(evt) {   
+function handleStart(evt) {
     var touchPos = getTouchPos(canvas, evt);
     startPos = touchPos;
     lastTime = Date.now();
@@ -65,12 +66,12 @@ function handleStart(evt) {
     writeMessage("DOWN");
 }
 
-function handleEnd(evt) {   
+function handleEnd(evt) {
 
   evt.preventDefault(); //prvent mouse movement
   newTime = Date.now();
 
-  var totalTime = newTime - lastTime;    
+  var totalTime = newTime - lastTime;
   var lastTouch = evt.changedTouches[0];
 
   var message = "X:  " + startPos.x + "   Y:  " + startPos.y + "      X:  " + lastTouch.pageX + "   Y:  " + lastTouch.pageY + '   Time:   ' + totalTime;
@@ -81,7 +82,7 @@ function handleEnd(evt) {
 
 
 
-//start of implementation for mouse to test in browser  
+//start of implementation for mouse to test in browser
 
 canvas.addEventListener("mousedown",function(evt){
   var mousePos = getMousePos(canvas,evt);
@@ -95,15 +96,15 @@ canvas.addEventListener("mouseup",function(evt){
   newTime = Date.now();
 
 
-  var totalTime = newTime - lastTime;  
+  var totalTime = newTime - lastTime;
   var mousePos = getMousePos(canvas,evt);
   endPos = mousePos;
   writeMessage("UP");
 
   var message = "X:  " + startPos.x + "   Y:  " + startPos.y + "      X:  " + endPos.x + "   Y:  " + endPos.y + '   Time:   ' + totalTime;
-  
+
   writeMessage(message);
-  
+
   g_client.sendCmd('swipe',{ platform: "mouse" , startX: startPos.x, startY: startPos.y, endX: endPos.x, endY: endPos.y, duration: totalTime});
   click = false;
 });
@@ -118,11 +119,6 @@ function getMousePos(canvas, evt) {
   };
 }
 
-
-
-
-
-
   g_client.addEventListener('score', handleScore);
   g_client.addEventListener('die', handleDeath);
 
@@ -130,31 +126,27 @@ function getMousePos(canvas, evt) {
   //g_client.sendCmd('setColor', { color: color });
   //**/document.body.style.backgroundColor = color;
 
-  g_audioManager = new AudioManager();
+  //g_audioManager = new AudioManager();
 
   var sendPad = function(e) {
-    
+
   };
 
-  ExampleUI.setupStandardControllerUI(g_client, globals);  
-
+  CommonUI.setupStandardControllerUI(g_client, globals);
 };
 
-var test = document.getElementById('hft-content');  
-
-    
+var test = document.getElementById('hft-content');
 
 // Start the main app logic.
 requirejs(
-  [ '../../../scripts/gameclient',    
-    '../../scripts/audio',
-    '../../scripts/dpad',
-    '../../scripts/exampleui',
-    '../../scripts/input',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
-    '../../scripts/touch',
-
+  [ '../../../scripts/commonui',
+    '../../../scripts/gameclient',
+    '../../../scripts/misc/dpad',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
+    '../../../scripts/misc/touch',
+    '../../../3rdparty/jsfx/audio',
   ],
   main
 );
