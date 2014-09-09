@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		playersRequired = 4;
+		playersRequired = 2;
 
 		switchTurn = false;
 		readyForNextTurn = false;
