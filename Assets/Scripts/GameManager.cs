@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		announcingTurn = false;
 		goToNextTurn = false;
-		gameState = "waiting";
+		gameState = "start";
 		turnCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
