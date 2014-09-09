@@ -9,7 +9,6 @@ requirejs(
     'hft/misc/misc',
     'hft/misc/mobilehacks',
     'hft/misc/touch',
-    '../bower_components/hft-utils/dist/audio',
   ], function(
     CommonUI,
     GameClient,
@@ -17,8 +16,7 @@ requirejs(
     Input,
     Misc,
     MobileHacks,
-    Touch,
-    AudioManager) {
+    Touch) {
   var g_client;
   var g_audioManager;
 
@@ -133,8 +131,6 @@ function getMousePos(canvas, evt) {
   //var color = Misc.randCSSColor();
   //g_client.sendCmd('setColor', { color: color });
   //**/document.body.style.backgroundColor = color;
-
-  //g_audioManager = new AudioManager();
 
   var sendPad = function(e) {
 
