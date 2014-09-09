@@ -35,7 +35,7 @@ public class HappySpawner : MonoBehaviour {
 
 		Vector3 spawnPosition = transform.position + new Vector3(
 			Random.Range(-10f, 10f),
-			1f,
+			4f,
 			Random.Range(-10f, 10f)
 			);
 
