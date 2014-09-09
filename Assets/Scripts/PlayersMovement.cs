@@ -11,6 +11,7 @@ public class PlayersMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		canPlay = false;
+		ChangeAlpha (0.25f);
 	}
 	
 	// Update is called once per frame
@@ -32,9 +33,18 @@ public class PlayersMovement : MonoBehaviour {
 
 
 			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * strength);
+
+			ChangeAlpha(0.25f);
 			canPlay = false;
 		}
 
+	}
+
+	void ChangeAlpha(float f){
+		Material m = GetComponent<Renderer> ().material;
+		Color c = m.color;
+		c.a = f;
+		m.color = c;
 	}
 
 	Vector2 CalcDirection(Vector2 s, Vector2 e){

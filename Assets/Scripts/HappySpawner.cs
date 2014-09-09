@@ -5,13 +5,14 @@ using HappyFunTimes;
 public class HappySpawner : MonoBehaviour {
 
 	public GameObject PrefabToSpawnForPlayer;
+	private GameManager gameManager;
+	private GameObject[] team1SpawnPos;
+	private GameObject[] team2SpawnPos;
+	private int currentTeam1SpawnPoint;
+	private int currentTeam2SpawnPoint;
 
 	GameServer server;
 	public int playerCount;
-
-
-	public Color team1Color;
-	public Color team2Color;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +23,14 @@ public class HappySpawner : MonoBehaviour {
 		server.OnConnect += Connected;
 		server.OnDisconnect += Disconnected;
 		server.Init();
+		gameManager = GameObject.Find ("GameManager").GetComponent<GameManager>();
+		team1SpawnPos = GameObject.FindGameObjectsWithTag("SpawnPointTeam1");
+		team2SpawnPos = GameObject.FindGameObjectsWithTag("SpawnPointTeam2");
+		currentTeam1SpawnPoint = 0;
+		currentTeam2SpawnPoint = 0;
+		Debug.Log ("POS1  " + team1SpawnPos [0].transform.position);
+		Debug.Log ("POS2  " + team2SpawnPos [0].transform.position);
+
 	}
 	
 	// Update is called once per frame
@@ -33,31 +42,46 @@ public class HappySpawner : MonoBehaviour {
 
 		Debug.Log("HappySpawner:StartNewPlayer");
 
-		Vector3 spawnPosition = transform.position + new Vector3(
-			Random.Range(-10f, 10f),
-			4f,
-			Random.Range(-10f, 10f)
-			);
+		int t = GetPlayerTeam ();
+		Vector3 newPos = getNewSpawnPos (t);
+
 
 
 		// Spawn a new player then add a script to it.
-		var go = (GameObject)Instantiate(PrefabToSpawnForPlayer, spawnPosition, transform.rotation);
+		var go = (GameObject)Instantiate(PrefabToSpawnForPlayer, newPos, transform.rotation);
 
-		AssignPlayerToTeam (go);
+		if (t == 1) {
+			go.GetComponent<Renderer> ().material.color = gameManager.team1Color;
+			go.tag = "playerTeam1";
+		} else if ( t == 2) {
+			go.GetComponent<Renderer> ().material.color = gameManager.team2Color;
+			go.tag = "playerTeam2";
+		}
 
 		// Get the Example3rdPersonController script to this object.
 		var player = go.GetComponent<HappyController>();
 		player.Init(e.netPlayer, "Player" + (++playerCount));
 	}
 
-	void AssignPlayerToTeam (GameObject player){
-			if (playerCount % 2 == 0) {
-				player.GetComponent<Renderer> ().material.color = team1Color;
-				player.tag = "playerTeam1";
-			} else {
-				player.GetComponent<Renderer> ().material.color = team2Color;
-				player.tag = "playerTeam2";
-			}
+	int GetPlayerTeam (){
+		if (playerCount % 2 == 0) {
+			return 2;
+		} else {
+			return 1;
+		}
+	}
+
+	Vector3 getNewSpawnPos(int team){
+		Vector3 newPos = Vector3.zero;
+		if (team == 1) {
+			newPos = team1SpawnPos[currentTeam1SpawnPoint].transform.position;
+			++currentTeam1SpawnPoint;
+		} else if (team == 2){
+			newPos = team2SpawnPos[currentTeam2SpawnPoint].transform.position;
+			++currentTeam2SpawnPoint;
+		}
+		Debug.Log ("newpos = " + newPos);
+		return newPos;
 	}
 	
 	void Connected(object sender, System.EventArgs e) {

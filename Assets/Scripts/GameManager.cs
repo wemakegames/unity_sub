@@ -6,22 +6,28 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
 	static string gameState;
+	public Color team1Color = Color.blue;
+	public Color team2Color = Color.red;
 
 	private int goalCountRed = 0;
 	private int goalCountBlue = 0;
-	private Text turnCounter;
+
+	private bool switchTurn;
+
+	private Text turnIndicatorText;
 	private GameObject turnAnnouncerContainer;
 	private GameObject waitingUIContainer;
 	private Text waitingTeam1;
 	private Text waitingTeam2;
-
 	private Text turnAnnouncer;
-	private bool announcingTurn;
+
 	private Text redCounter;
 	private Text blueCounter;
 
-	private bool goToNextTurn;
+	private bool readyForNextTurn;
 	private SoundManager soundManager;
+
+	private int playersRequired;
 
 	[HideInInspector]
 	public GameObject[] team1; 
@@ -30,10 +36,13 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		announcingTurn = false;
-		goToNextTurn = false;
+		playersRequired = 4;
+
+		switchTurn = false;
+		readyForNextTurn = false;
+
 		gameState = "waiting";
-		turnCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
+		turnIndicatorText = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
 		blueCounter = GameObject.Find ("CounterBlueText").GetComponent<Text>();
@@ -48,8 +57,6 @@ public class GameManager : MonoBehaviour {
 		waitingTeam2 = GameObject.Find ("waitingTeam2").GetComponent<Text>();
 		waitingUIContainer.SetActive(true);
 
-
-
 	}
 	
 	// Update is called once per frame
@@ -59,11 +66,8 @@ public class GameManager : MonoBehaviour {
 
 		if (gameState == "waiting") {
 			StartCoroutine (UpdateWaitingScreen());
-		}
-
-		else if (gameState == "start" || gameState == "team1" || gameState == "team2")
+		} else if (gameState == "start" || gameState == "team1" || gameState == "team2")
 		{
-
 			CheckActiveTeam (); //cheks if players in active team have playerd or not
 		}
 
@@ -73,8 +77,7 @@ public class GameManager : MonoBehaviour {
 		waitingTeam1.text = team1.Length.ToString();
 		waitingTeam2.text = team2.Length.ToString();
 
-		if ((team1.Length + team2.Length) > 1) {
-
+		if ((team1.Length + team2.Length) >= playersRequired) {
 
 			yield return new WaitForSeconds(2);
 			gameState = "start";
@@ -104,18 +107,28 @@ public class GameManager : MonoBehaviour {
 			UpdateTurnCounter(2);
 		}
 
-		if (goToNextTurn) {
+		if (readyForNextTurn) {
 			foreach(GameObject obj in activeTeam) {
+				ChangeAlpha(1.0f, obj);
+
 				obj.GetComponent<PlayersMovement>().canPlay = true;
 			}
-			goToNextTurn = false;
+			readyForNextTurn = false;
 		}
 	}
 
+	void ChangeAlpha(float f, GameObject obj){
+		Material m = obj.GetComponent<Renderer> ().material;
+		Color c = m.color;
+		c.a = f;
+		m.color = c;
+	}
+	
+	
 	void CheckActiveTeam() {
 		if (activeTeam.Length > 0) { 
 
-			if (!announcingTurn) {
+			if (!switchTurn) {
 				int j = 0;
 				foreach(GameObject obj in activeTeam) {
 					j += Convert.ToInt32(obj.GetComponent<PlayersMovement>().canPlay);
@@ -130,7 +143,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator AnnounceNextTurn(){
-		announcingTurn = !announcingTurn;
+		switchTurn = !switchTurn;
 		yield return new WaitForSeconds(2);
 		turnAnnouncerContainer.SetActive(true);
 		soundManager.PlaySound ("goal");
@@ -160,7 +173,7 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds(2);
 
 		turnAnnouncerContainer.SetActive(false);
-		goToNextTurn = true;
+		readyForNextTurn = true;
 		if (gameState == "team2" || gameState == "start") {
 			gameState = "team1";
 		} else {
@@ -168,7 +181,7 @@ public class GameManager : MonoBehaviour {
 		}
 		
 
-		announcingTurn = !announcingTurn;
+		switchTurn = !switchTurn;
 
 	}
 
@@ -176,13 +189,13 @@ public class GameManager : MonoBehaviour {
 	void UpdateTurnCounter(int team){
 		switch (team) {
 			case 1:
-			turnCounter.text = "Team 1";
-			turnCounter.color = Color.blue;
+			turnIndicatorText.text = "Team 1";
+			turnIndicatorText.color = Color.blue;
 			break;
 
 			case 2:
-			turnCounter.text = "Team 2";
-			turnCounter.color = Color.red;
+			turnIndicatorText.text = "Team 2";
+			turnIndicatorText.color = Color.red;
 			break;
 		}
 	}

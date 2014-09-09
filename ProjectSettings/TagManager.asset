@@ -8,6 +8,8 @@ TagManager:
   - NetPlayers
   - playerTeam1
   - playerTeam2
+  - SpawnPointTeam1
+  - SpawnPointTeam2
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
