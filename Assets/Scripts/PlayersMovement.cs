@@ -6,6 +6,7 @@ public class PlayersMovement : MonoBehaviour {
 	public float flickStrenghtMouse;
 	public float maxSpeed;
 	public bool canPlay;
+	public Vector3 initialPosition;
 
 
 	// Use this for initialization

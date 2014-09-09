@@ -28,8 +28,6 @@ public class HappySpawner : MonoBehaviour {
 		team2SpawnPos = GameObject.FindGameObjectsWithTag("SpawnPointTeam2");
 		currentTeam1SpawnPoint = 0;
 		currentTeam2SpawnPoint = 0;
-		Debug.Log ("POS1  " + team1SpawnPos [0].transform.position);
-		Debug.Log ("POS2  " + team2SpawnPos [0].transform.position);
 
 	}
 	
@@ -49,6 +47,7 @@ public class HappySpawner : MonoBehaviour {
 
 		// Spawn a new player then add a script to it.
 		var go = (GameObject)Instantiate(PrefabToSpawnForPlayer, newPos, transform.rotation);
+		go.GetComponent<PlayersMovement> ().initialPosition = newPos;
 
 		if (t == 1) {
 			go.GetComponent<Renderer> ().material.color = gameManager.team1Color;

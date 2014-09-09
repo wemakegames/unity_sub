@@ -200,4 +200,14 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void ResetAllPlayersPositions(){
+		foreach(GameObject obj in team1) {
+			obj.transform.position = obj.GetComponent<PlayersMovement>().initialPosition;
+		}
+
+		foreach(GameObject obj in team2) {
+			obj.transform.position = obj.GetComponent<PlayersMovement>().initialPosition;
+		}
+	}
+
 }

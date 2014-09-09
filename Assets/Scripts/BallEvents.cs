@@ -48,15 +48,18 @@ public class BallEvents : MonoBehaviour {
 	}
 
 	IEnumerator CenterBall() {
-	 if (!ballIsIn) {
-		ballIsIn = !ballIsIn;
-		yield return new WaitForSeconds (2);
-		soundManager.PlaySound ("goal");
-		rigidbody.angularVelocity = Vector3.zero;
-		rigidbody.velocity = Vector3.zero;
-		transform.position = new Vector3 (0, 2.5f, 0);		
-		ballIsIn = !ballIsIn;
-	}
+		if (!ballIsIn) {
+			ballIsIn = !ballIsIn;
+			yield return new WaitForSeconds (2);
+			soundManager.PlaySound ("goal");
+			rigidbody.angularVelocity = Vector3.zero;
+			rigidbody.velocity = Vector3.zero;
+			transform.position = new Vector3 (0, 2.5f, 0);		
+			ballIsIn = !ballIsIn;
+
+			gameManager.ResetAllPlayersPositions();
+
+		}
 
 	}
 }
