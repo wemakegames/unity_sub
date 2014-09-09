@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
+	static string gameState;
+
 	private int goalCountRed = 0;
 	private int goalCountBlue = 0;
 	private Text turnCounter;
@@ -13,7 +15,7 @@ public class GameManager : MonoBehaviour {
 	private bool announcingTurn;
 	private Text redCounter;
 	private Text blueCounter;
-	private string currentTurn;   //false is team one, true is team 2
+
 	private bool goToNextTurn;
 	private SoundManager soundManager;
 
@@ -26,7 +28,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		announcingTurn = false;
 		goToNextTurn = false;
-		currentTurn = "start";
+		gameState = "waiting";
 		turnCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
@@ -40,9 +42,19 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		UpdateTeams ();  //checks if new players have been added
-		CheckActiveTeam(); //cheks if players in active team have playerd or not
+		if (gameState == "waiting") {
+			UpdateWaitingScreen();
+		}
 
+		else if (gameState == "start" || gameState == "team1" || gameState == "team2")
+		{
+			UpdateTeams ();  //checks if new players have been added
+			CheckActiveTeam (); //cheks if players in active team have playerd or not
+		}
+
+	}
+
+	void UpdateWaitingScreen(){
 	}
 
 	public void IncreaseGoalCount(string team){
@@ -59,10 +71,10 @@ public class GameManager : MonoBehaviour {
 		team1 = GameObject.FindGameObjectsWithTag("playerTeam1");
 		team2 = GameObject.FindGameObjectsWithTag("playerTeam2");
 
-		if (currentTurn == "team1" || currentTurn =="start"){
+		if (gameState == "team1" || gameState =="start"){
 			activeTeam = team1;
 			UpdateTurnCounter(1);
-		} else if (currentTurn == "team2"){
+		} else if (gameState == "team2"){
 			activeTeam = team2;
 			UpdateTurnCounter(2);
 		}
@@ -99,7 +111,7 @@ public class GameManager : MonoBehaviour {
 		soundManager.PlaySound ("goal");
 		string t = "";
 		Color c = Color.black;
-		switch (currentTurn) {
+		switch (gameState) {
 
 		case "start":
 			c = Color.white;
@@ -124,10 +136,10 @@ public class GameManager : MonoBehaviour {
 
 		turnAnnouncerContainer.SetActive(false);
 		goToNextTurn = true;
-		if (currentTurn == "team2" || currentTurn == "start") {
-			currentTurn = "team1";
+		if (gameState == "team2" || gameState == "start") {
+			gameState = "team1";
 		} else {
-			currentTurn = "team2";
+			gameState = "team2";
 		}
 		
 
