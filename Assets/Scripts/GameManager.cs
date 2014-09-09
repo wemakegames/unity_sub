@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour {
 	private int goalCountBlue = 0;
 	private Text turnCounter;
 	private GameObject turnAnnouncerContainer;
+	private GameObject waitingUIContainer;
+	private Text waitingTeam1;
+	private Text waitingTeam2;
+
 	private Text turnAnnouncer;
 	private bool announcingTurn;
 	private Text redCounter;
@@ -28,7 +32,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		announcingTurn = false;
 		goToNextTurn = false;
-		gameState = "start";
+		gameState = "waiting";
 		turnCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
@@ -38,23 +42,44 @@ public class GameManager : MonoBehaviour {
 
 		turnAnnouncerContainer = GameObject.Find ("TurnAnnouncer");
 		turnAnnouncerContainer.SetActive(false);
+
+		waitingUIContainer = GameObject.Find ("WaitingUI");
+		waitingTeam1 = GameObject.Find ("waitingTeam1").GetComponent<Text>();
+		waitingTeam2 = GameObject.Find ("waitingTeam2").GetComponent<Text>();
+		waitingUIContainer.SetActive(true);
+
+
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		UpdateTeams ();  //checks if new players have been added
+
 		if (gameState == "waiting") {
-			UpdateWaitingScreen();
+			StartCoroutine (UpdateWaitingScreen());
 		}
 
 		else if (gameState == "start" || gameState == "team1" || gameState == "team2")
 		{
-			UpdateTeams ();  //checks if new players have been added
+
 			CheckActiveTeam (); //cheks if players in active team have playerd or not
 		}
 
 	}
 
-	void UpdateWaitingScreen(){
+	IEnumerator UpdateWaitingScreen(){
+		waitingTeam1.text = team1.Length.ToString();
+		waitingTeam2.text = team2.Length.ToString();
+
+		if ((team1.Length + team2.Length) > 1) {
+
+
+			yield return new WaitForSeconds(2);
+			gameState = "start";
+			waitingUIContainer.SetActive(false);
+		}
 	}
 
 	public void IncreaseGoalCount(string team){
