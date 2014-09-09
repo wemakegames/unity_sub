@@ -150,10 +150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b6b57bad7d3af4fa11b964d4f42dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flickStrenghtTouch: 10
+  flickStrenghtTouch: 50
   flickStrenghtMouse: 10
   maxSpeed: 100
   canPlay: 0
+  initialPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
