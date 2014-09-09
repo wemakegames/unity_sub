@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using HappyFunTimes;
+using UnityEngine.UI;
 
 public class HappyController : MonoBehaviour {
 
 	private PlayersMovement playerMovement;
+	private NetPlayer m_netPlayer;
+	private string m_name;
 
 	[CmdName("pad")]
 	class MessagePad : HappyFunTimes.MessageCmdData {
@@ -29,8 +32,13 @@ public class HappyController : MonoBehaviour {
 	};
 	
 	[CmdName("setName")]
-	class MessageSetName : HappyFunTimes.MessageCmdData {
-		public string name;
+	private class MessageSetName : MessageCmdData {
+		public MessageSetName() {  // needed for deserialization
+		}
+		public MessageSetName(string _name) {
+			name = _name;
+		}
+		public string name = "";
 	};
 	
 	[CmdName("busy")]
@@ -61,7 +69,7 @@ public class HappyController : MonoBehaviour {
 	{
 		_player = player;
 		_padEmu = new DPadEmuJS();
-		SetName(name);
+		m_name = "TEST";
 	}
 
 	void Remove(object sender, System.EventArgs e) {
@@ -96,40 +104,17 @@ public class HappyController : MonoBehaviour {
 		_guiStyle.normal.background = tex;
 		*/
 	}
+
 	
-	void SetName(string name) {
-		/*
-		_playerName = name;
-		gameObject.name = "Player-" + _playerName;
-		var size : Vector2 = _guiStyle.CalcSize(GUIContent(_playerName));
-		_nameRect.width = size.x + 10;
-		_nameRect.height = size.y + 5;
-		*/
-	}
-	
-	void OnGUI() {
-		/*
-		var size : Vector2 = _guiStyle.CalcSize(GUIContent(_playerName));
-		var coords : Vector3 = Camera.main.WorldToScreenPoint(transform.position + _nameOffset);
-		_nameRect.x = coords.x - size.x * 0.5 - 5;
-		_nameRect.y = Screen.height - coords.y;
-		_guiStyle.normal.textColor = Color.black;
-		_guiStyle.contentOffset.x = 4;
-		_guiStyle.contentOffset.y = 2;
-		GUI.Box(_nameRect, _playerName, _guiStyle);
-		*/
-	}
-	
-	void OnSetName(MessageSetName data) {
-		/*
-		if (data.name.length > 0) {
-			SetName(data.name);
+	private void OnSetName(MessageSetName data) {
+		if (data.name.Length == 0) {
+			m_netPlayer.SendCmd(new MessageSetName(m_name));
 		} else {
-			var msg = new MessageSetName();
-			msg.name = _playerName;
-			_netPlayer.SendCmd(msg);
+			m_name = data.name;
+			Text t = gameObject.GetComponentInChildren<Text>();
+			t.text = m_name;
+
 		}
-		*/
 	}
 	
 	void OnBusy(MessageBusy data) {
