@@ -1,6 +1,16 @@
 "use strict";
 
-var main = function(
+// Start the main app logic.
+requirejs(
+  [ 'hft/commonui',
+    'hft/gameclient',
+    'hft/misc/dpad',
+    'hft/misc/input',
+    'hft/misc/misc',
+    'hft/misc/mobilehacks',
+    'hft/misc/touch',
+    '../bower_components/hft-utils/dist/audio',
+  ], function(
     CommonUI,
     GameClient,
     DPad,
@@ -23,9 +33,7 @@ function $(id) {
 }
 
 console.log( "Create new GameClient" );
-g_client = new GameClient({
-  gameId: "subbuteo",
-});
+g_client = new GameClient();
 
 function handleScore() {
 };
@@ -133,21 +141,7 @@ function getMousePos(canvas, evt) {
   };
 
   CommonUI.setupStandardControllerUI(g_client, globals);
-};
+});
 
-var test = document.getElementById('hft-content');
 
-// Start the main app logic.
-requirejs(
-  [ '../../../scripts/commonui',
-    '../../../scripts/gameclient',
-    '../../../scripts/misc/dpad',
-    '../../../scripts/misc/input',
-    '../../../scripts/misc/misc',
-    '../../../scripts/misc/mobilehacks',
-    '../../../scripts/misc/touch',
-    '../../../3rdparty/jsfx/audio',
-  ],
-  main
-);
 
