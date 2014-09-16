@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
 	private bool readyForNextTurn;
 	private SoundManager soundManager;
 
-	private int playersRequired;
+	public int playersRequired;
 
 	[HideInInspector]
 	public GameObject[] team1; 
@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		playersRequired = 2;
 
 		switchTurn = false;
 		readyForNextTurn = false;
