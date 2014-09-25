@@ -107,13 +107,15 @@ public class HappyController : MonoBehaviour {
 
 	
 	private void OnSetName(MessageSetName data) {
-		if (data.name.Length == 0) {
-			m_netPlayer.SendCmd(new MessageSetName(m_name));
-		} else {
-			m_name = data.name;
-			Text t = gameObject.GetComponentInChildren<Text>();
-			t.text = m_name;
+		if (m_netPlayer !=null) {
+			if (data.name.Length == 0) {
+				m_netPlayer.SendCmd(new MessageSetName(m_name));
+			} else {
+				m_name = data.name;
+				Text t = gameObject.GetComponentInChildren<Text>();
+				t.text = m_name;
 
+			}
 		}
 	}
 	
