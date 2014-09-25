@@ -64,9 +64,9 @@ public class HappySpawner : MonoBehaviour {
 
 	int GetPlayerTeam (){
 		if (playerCount % 2 == 0) {
-			return 2;
-		} else {
 			return 1;
+		} else {
+			return 2;
 		}
 	}
 
@@ -79,7 +79,6 @@ public class HappySpawner : MonoBehaviour {
 			newPos = team2SpawnPos[currentTeam2SpawnPoint].transform.position;
 			++currentTeam2SpawnPoint;
 		}
-		Debug.Log ("newpos = " + newPos);
 		return newPos;
 	}
 	
