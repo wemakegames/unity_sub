@@ -517,7 +517,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: MATCH START!
+  m_Text: Kick Off!
 --- !u!222 &195485081
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2684,12 +2684,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad67b0b5b9b1d044db969d43b1f75bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameState: 
   team1Color: {r: 0, g: 0, b: 1, a: 1}
   team2Color: {r: 1, g: 0, b: 0, a: 1}
+  team1Name: Cerulean Broncos
+  team2Name: Lightning Pepperoni
   playersRequired: 2
   team1: []
   team2: []
-  activeTeam: []
+  nextTeam: 0
 --- !u!224 &1418962457
 RectTransform:
   m_ObjectHideFlags: 0

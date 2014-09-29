@@ -6,12 +6,14 @@ public class PlayersMovement : MonoBehaviour {
 	public float flickStrenghtMouse;
 	public float maxSpeed;
 	public bool canPlay;
+	public bool hasPlayed;
 	public Vector3 initialPosition;
 
 
 	// Use this for initialization
 	void Start () {
 		canPlay = false;
+		hasPlayed = false;
 		ChangeAlpha (0.25f);
 	}
 	
@@ -37,6 +39,7 @@ public class PlayersMovement : MonoBehaviour {
 
 			ChangeAlpha(0.25f);
 			canPlay = false;
+			hasPlayed = true;
 		}
 
 	}
