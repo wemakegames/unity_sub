@@ -116,6 +116,54 @@ public class GameManager : MonoBehaviour {
 		team2.CopyTo(playersRoster, team1.Length);
 	}
 
+	IEnumerator AnnounceNextTurn(){
+		
+		if (turnAnnouncerContainer.activeSelf == false){
+			yield return new WaitForSeconds(1);
+			
+			Color c = Color.white;
+			String t = "";
+			
+			if (gameState == "start") {
+				c = Color.white;
+				t = "Kick Off!";
+			} else {
+				switch (nextTeam){
+				case 1:
+					c = team1Color;
+					t = team1Name;
+					break;
+					
+				case 2:
+					c = team2Color;
+					t = team2Name;
+					break;
+				}
+			}
+			
+			turnAnnouncerContainer.SetActive(true);
+			
+			soundManager.PlaySound ("goal");
+			
+			turnAnnouncer.color = c;
+			turnAnnouncer.text = t;
+			
+			yield return new WaitForSeconds(5);
+			
+			turnAnnouncerContainer.SetActive(false);
+			
+			SetNewActivePlayer(nextTeam);
+			
+			if (nextTeam == 1) {
+				gameState = "team1";
+				nextTeam = 2;
+			} else if (nextTeam == 2){
+				gameState = "team2";
+				nextTeam = 1;
+			}
+		}	
+	}
+
 	void SetNewActivePlayer(int nt){
 
 		if (activePlayer == null){
@@ -201,56 +249,6 @@ public class GameManager : MonoBehaviour {
 			Debug.Log ("No player in current team :(");
 		}
 	}
-
-	IEnumerator AnnounceNextTurn(){
-
-		if (turnAnnouncerContainer.activeSelf == false){
-			yield return new WaitForSeconds(1);
-
-			Color c = Color.white;
-			String t = "";
-
-			if (gameState == "start") {
-				c = Color.white;
-				t = "Kick Off!";
-			} else {
-				switch (nextTeam){
-				case 1:
-					c = team1Color;
-					t = team1Name;
-					break;
-
-				case 2:
-					c = team2Color;
-					t = team2Name;
-					break;
-				}
-			}
-
-			turnAnnouncerContainer.SetActive(true);
-
-			soundManager.PlaySound ("goal");
-
-			turnAnnouncer.color = c;
-			turnAnnouncer.text = t;
-
-			yield return new WaitForSeconds(2);
-
-			turnAnnouncerContainer.SetActive(false);
-
-			SetNewActivePlayer(nextTeam);
-
-			if (nextTeam == 1) {
-				gameState = "team1";
-				nextTeam = 2;
-			} else if (nextTeam == 2){
-				gameState = "team2";
-				nextTeam = 1;
-			}
-		}
-
-	}
-
 
 	void UpdateTurnCounter(int team){
 		switch (team) {
