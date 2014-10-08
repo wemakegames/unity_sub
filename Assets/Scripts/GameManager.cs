@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour {
 			turnAnnouncer.color = c;
 			turnAnnouncer.text = t;
 			
-			yield return new WaitForSeconds(5);
+			yield return new WaitForSeconds(2);
 			
 			turnAnnouncerContainer.SetActive(false);
 			
