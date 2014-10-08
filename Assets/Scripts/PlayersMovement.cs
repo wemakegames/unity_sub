@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using HappyFunTimes;
 
 public class PlayersMovement : MonoBehaviour {
 	public float flickStrenghtTouch;
@@ -9,17 +10,37 @@ public class PlayersMovement : MonoBehaviour {
 	public bool hasPlayed;
 	public Vector3 initialPosition;
 
+	private NetPlayer _player;
+	
+	[CmdName ("myTurn")]
+	private class MessageMyTurn : MessageCmdData {
 
-	// Use this for initialization
+		public MessageMyTurn(string _turnText) {
+			turnText = _turnText;
+		}		
+		public string turnText;
+	};
+
 	void Start () {
 		canPlay = false;
 		hasPlayed = false;
 		ChangeAlpha (0.25f);
+
+		_player = GetComponent<HappyController>()._player;
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {		
 		LimitVelocity ();
+
+		if (_player != null) {
+			if (canPlay && !hasPlayed) {
+				_player.SendCmd (new MessageMyTurn ("MY TURN"));
+			} else {
+				_player.SendCmd (new MessageMyTurn ("NOT MY TURN"));
+			}
+		}
+
 	}
 
 	void LimitVelocity(){

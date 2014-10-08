@@ -69,7 +69,7 @@ function handleStart(evt) {
     startPos = touchPos;
     lastTime = Date.now();
     click = true;
-    writeMessage("DOWN");
+    //writeMessage("DOWN");
 }
 
 function handleEnd(evt) {
@@ -81,7 +81,7 @@ function handleEnd(evt) {
   var lastTouch = evt.changedTouches[0];
 
   var message = "X:  " + startPos.x + "   Y:  " + startPos.y + "      X:  " + lastTouch.pageX + "   Y:  " + lastTouch.pageY + '   Time:   ' + totalTime;
-  writeMessage(message);
+  //writeMessage(message);
   g_client.sendCmd('swipe',{ platform: "touch" , startX: startPos.x, startY: startPos.y, endX: lastTouch.pageX, endY: lastTouch.pageY, duration: totalTime});
   click = false;
 }
@@ -95,7 +95,7 @@ canvas.addEventListener("mousedown",function(evt){
   startPos = mousePos;
   lastTime = Date.now();
   click = true;
-  writeMessage("DOWN");
+  //writeMessage("DOWN");
 
 });
 canvas.addEventListener("mouseup",function(evt){
@@ -105,11 +105,11 @@ canvas.addEventListener("mouseup",function(evt){
   var totalTime = newTime - lastTime;
   var mousePos = getMousePos(canvas,evt);
   endPos = mousePos;
-  writeMessage("UP");
+  //writeMessage("UP");
 
   var message = "X:  " + startPos.x + "   Y:  " + startPos.y + "      X:  " + endPos.x + "   Y:  " + endPos.y + '   Time:   ' + totalTime;
 
-  writeMessage(message);
+  //writeMessage(message);
 
   g_client.sendCmd('swipe',{ platform: "mouse" , startX: startPos.x, startY: startPos.y, endX: endPos.x, endY: endPos.y, duration: totalTime});
   click = false;
@@ -125,6 +125,8 @@ function getMousePos(canvas, evt) {
   };
 }
 
+
+
   g_client.addEventListener('score', handleScore);
   g_client.addEventListener('die', handleDeath);
 
@@ -132,7 +134,15 @@ function getMousePos(canvas, evt) {
   //g_client.sendCmd('setColor', { color: color });
   //**/document.body.style.backgroundColor = color;
 
-  var sendPad = function(e) {
+  
+g_client.addEventListener('myTurn', handleTurn);
+
+function handleTurn(data) {
+       writeMessage(data.turnText)
+    }
+
+  
+var sendPad = function(e) {
 
   };
 
