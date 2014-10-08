@@ -46,7 +46,7 @@ public class HappyController : MonoBehaviour {
 		public bool busy;
 	};
 
-	NetPlayer _player;
+	public NetPlayer _player;
 	DPadEmuJS _padEmu;
 	
 	void Start () {
@@ -107,16 +107,16 @@ public class HappyController : MonoBehaviour {
 
 	
 	private void OnSetName(MessageSetName data) {
-		if (m_netPlayer !=null) {
+
 			if (data.name.Length == 0) {
-				m_netPlayer.SendCmd(new MessageSetName(m_name));
+				_player.SendCmd(new MessageSetName(m_name));
 			} else {
 				m_name = data.name;
 				Text t = gameObject.GetComponentInChildren<Text>();
 				t.text = m_name;
 
 			}
-		}
+
 	}
 	
 	void OnBusy(MessageBusy data) {
