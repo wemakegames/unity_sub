@@ -48,7 +48,7 @@
 
 #canvas{
 
-  background: url(../hft-assets/grass.jpg);
+  background-color: black;
   
   background-size: 240px 240px;
   background-repeat: repeat;

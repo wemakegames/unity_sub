@@ -14,6 +14,20 @@ public class HappySpawner : MonoBehaviour {
 	GameServer server;
 	public int playerCount;
 
+	public NetPlayer _player;
+
+	[CmdName ("changeBG")]
+	private class MessageChangeBG : MessageCmdData {
+		public int playerTeam;
+		public MessageChangeBG(int _team) {
+			playerTeam = _team;
+			Debug.Log ("team  " + playerTeam);
+		}		
+
+	};
+
+
+
 	// Use this for initialization
 	void Start () {
 		var options = new GameServer.Options();
@@ -43,8 +57,6 @@ public class HappySpawner : MonoBehaviour {
 		int t = GetPlayerTeam ();
 		Vector3 newPos = getNewSpawnPos (t);
 
-
-
 		// Spawn a new player then add a script to it.
 		var go = (GameObject)Instantiate(PrefabToSpawnForPlayer, newPos, transform.rotation);
 		go.GetComponent<PlayersMovement> ().initialPosition = newPos;
@@ -60,6 +72,10 @@ public class HappySpawner : MonoBehaviour {
 		// Get the Example3rdPersonController script to this object.
 		var player = go.GetComponent<HappyController>();
 		player.Init(e.netPlayer, "Player" + (++playerCount));
+		_player = go.GetComponent<HappyController>()._player;
+
+		//change phone bg
+		_player.SendCmd (new MessageChangeBG (GetPlayerTeam()));	
 	}
 
 	int GetPlayerTeam (){

@@ -134,12 +134,23 @@ function getMousePos(canvas, evt) {
   //g_client.sendCmd('setColor', { color: color });
   //**/document.body.style.backgroundColor = color;
 
-  
-g_client.addEventListener('myTurn', handleTurn);
 
+
+
+function changeBG(data){
+  if (data.playerTeam = 1) {
+    canvas.style.backgroundColor = 'red';
+  } else if (data.playerTeam = 2) {    
+    canvas.style.backgroundColor = 'blue';
+  }
+}
+
+g_client.addEventListener('changeBG', changeBG);
+
+g_client.addEventListener('myTurn', handleTurn);
 function handleTurn(data) {
-       writeMessage(data.turnText)
-    }
+  writeMessage(data.turnText)
+}
 
   
 var sendPad = function(e) {
