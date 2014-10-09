@@ -22,6 +22,8 @@ public class PlayersMovement : MonoBehaviour {
 	};
 
 	void Start () {
+
+
 		canPlay = false;
 		hasPlayed = false;
 		ChangeAlpha (0.25f);
@@ -96,4 +98,5 @@ public class PlayersMovement : MonoBehaviour {
 		}
 		return strength;
 	}
+
 }

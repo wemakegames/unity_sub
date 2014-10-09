@@ -46,6 +46,16 @@ public class HappyController : MonoBehaviour {
 		public bool busy;
 	};
 
+	[CmdName("drawLine")]
+	class MessageDrawLine : HappyFunTimes.MessageCmdData {
+		public string platform;
+		public int playerX;
+		public int playerY;
+		public int lineEndX;
+		public int lineEndY;
+	};
+
+
 	public NetPlayer _player;
 	DPadEmuJS _padEmu;
 	
@@ -59,6 +69,8 @@ public class HappyController : MonoBehaviour {
 		_player.RegisterCmdHandler<MessageSetColor>(OnSetColor);
 		_player.RegisterCmdHandler<MessageSetName>(OnSetName);
 		_player.RegisterCmdHandler<MessageBusy>(OnBusy);
+		_player.RegisterCmdHandler<MessageDrawLine>(OnDrawLine);
+
 	}
 
 	void Update () {
@@ -108,19 +120,36 @@ public class HappyController : MonoBehaviour {
 	
 	private void OnSetName(MessageSetName data) {
 
-			if (data.name.Length == 0) {
-				_player.SendCmd(new MessageSetName(m_name));
-			} else {
-				m_name = data.name;
-				Text t = gameObject.GetComponentInChildren<Text>();
-				t.text = m_name;
-
-			}
-
+		if (data.name.Length == 0) {
+			_player.SendCmd(new MessageSetName(m_name));
+		} else {
+			m_name = data.name;
+			Text t = gameObject.GetComponentInChildren<Text>();
+			t.text = m_name;
+		}
 	}
 	
 	void OnBusy(MessageBusy data) {
 		// handle busy message if we care.
 	}
 
+	void OnDrawLine (MessageDrawLine data){
+
+
+		Vector3 oldStart = new Vector3(data.playerX, 0, -data.playerY);
+		Vector3 oldEnd = new Vector3(data.lineEndX,0, -data.lineEndY);
+
+		Vector3 dir = oldEnd - oldStart;
+		Debug.Log ("End  =  " + oldEnd + "      Start  =  " + oldStart + "      Dir =   " + dir);
+
+
+		Vector3 startPos = gameObject.transform.position;
+				
+//		dir = dir.normalized;
+
+		Debug.DrawRay (startPos, dir, Color.red, 1, false);
+	}
+
+
 }
+
