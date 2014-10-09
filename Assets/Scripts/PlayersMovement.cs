@@ -3,8 +3,8 @@ using System.Collections;
 using HappyFunTimes;
 
 public class PlayersMovement : MonoBehaviour {
-	public float flickStrenghtTouch;
-	public float flickStrenghtMouse;
+	private float flickStrenghtTouch;
+	private float flickStrenghtMouse;
 	public float maxSpeed;
 	public bool canPlay;
 	public bool hasPlayed;
@@ -29,6 +29,9 @@ public class PlayersMovement : MonoBehaviour {
 		ChangeAlpha (0.25f);
 
 		_player = GetComponent<HappyController>()._player;
+
+		flickStrenghtMouse = 2.0f;
+		flickStrenghtTouch = 1.0f;
 	}
 	
 	// Update is called once per frame
@@ -42,7 +45,6 @@ public class PlayersMovement : MonoBehaviour {
 				_player.SendCmd (new MessageMyTurn ("NOT MY TURN"));
 			}
 		}
-
 	}
 
 	void LimitVelocity(){
@@ -51,14 +53,12 @@ public class PlayersMovement : MonoBehaviour {
 		}
 	}
 
-	public void ApplyForce(Vector2 startPos, Vector2 endPos, float duration, string platform){
+	public void ApplyForce(Vector3 kickDir, float strength, string platform){
 		if (canPlay) {
-			Vector2 dir = CalcDirection (startPos, endPos);
-			float dist = CalcSwipeDistance (startPos, endPos);
-			float strength = CalcStrength (dist, duration, platform);
 
+			strength = CalcStrength(strength, platform);
 
-			rigidbody.AddForce (new Vector3 (dir.x, 0, -dir.y) * strength);
+			rigidbody.AddRelativeForce (kickDir * strength);
 
 			ChangeAlpha(0.25f);
 			canPlay = false;
@@ -87,16 +87,18 @@ public class PlayersMovement : MonoBehaviour {
 		return dist;
 	}
 
-	float CalcStrength (float d, float t, string platform){
-		float strength;
+	float CalcStrength (float s, string platform){
 
-		strength = d / t;
-		if (platform == "touch") {
-			strength *= flickStrenghtTouch;
-		} else if (platform == "mouse") {
-			strength *= flickStrenghtMouse;
+		switch (platform) {
+		case "mouse":
+			s *= flickStrenghtMouse;
+			break;
+
+		case "touch":
+			s *= flickStrenghtTouch;
+			break;
 		}
-		return strength;
+		return s;
 	}
 
 }

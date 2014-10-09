@@ -9,21 +9,20 @@ public class HappyController : MonoBehaviour {
 	private NetPlayer m_netPlayer;
 	private string m_name;
 
+	private Vector3 kickStart;
+	private Vector3 kickDir;
+	private float kickStrenght;
+
+
 	[CmdName("pad")]
 	class MessagePad : HappyFunTimes.MessageCmdData {
 		public int pad;
 		public int dir;
 	};
 
-	[CmdName("swipe")]
-	class MessageSwipe : HappyFunTimes.MessageCmdData {
+	[CmdName("kick")]
+	class MessageKick : HappyFunTimes.MessageCmdData {
 		public string platform;
-		public int startX;
-		public int startY;
-		public int endX;
-		public int endY;
-		public float duration;
-
 	};
 	
 	[CmdName("setColor")]
@@ -65,7 +64,7 @@ public class HappyController : MonoBehaviour {
 
 		_player.OnDisconnect += Remove;
 		_player.RegisterCmdHandler<MessagePad>(OnPad);
-		_player.RegisterCmdHandler<MessageSwipe>(OnSwipe);
+		_player.RegisterCmdHandler<MessageKick>(OnKick);
 		_player.RegisterCmdHandler<MessageSetColor>(OnSetColor);
 		_player.RegisterCmdHandler<MessageSetName>(OnSetName);
 		_player.RegisterCmdHandler<MessageBusy>(OnBusy);
@@ -86,14 +85,6 @@ public class HappyController : MonoBehaviour {
 
 	void Remove(object sender, System.EventArgs e) {
 		Destroy(gameObject);
-	}
-
-	void OnSwipe(MessageSwipe data) {
-
-		Vector2 startPos = new Vector2(data.startX,data.startY);
-		Vector2 endPos = new Vector2(data.endX,data.endY);
-
-		playerMovement.ApplyForce (startPos, endPos, data.duration, data.platform);
 	}
 
 	void OnPad(MessagePad data) {
@@ -135,19 +126,18 @@ public class HappyController : MonoBehaviour {
 
 	void OnDrawLine (MessageDrawLine data){
 
-
 		Vector3 oldStart = new Vector3(data.playerX, 0, -data.playerY);
 		Vector3 oldEnd = new Vector3(data.lineEndX,0, -data.lineEndY);
 
-		Vector3 dir = oldEnd - oldStart;
-		Debug.Log ("End  =  " + oldEnd + "      Start  =  " + oldStart + "      Dir =   " + dir);
+		kickStrenght = Mathf.Abs(Vector3.Distance(oldEnd,oldStart));
+		kickDir = oldEnd - oldStart;
+		kickStart = gameObject.transform.position;
+		Debug.DrawRay (kickStart, kickDir, Color.cyan, 0.2f, false);
+	}
 
-
-		Vector3 startPos = gameObject.transform.position;
-				
-//		dir = dir.normalized;
-
-		Debug.DrawRay (startPos, dir, Color.red, 1, false);
+	void OnKick(MessageKick data) {
+		Debug.Log (data.platform);
+		playerMovement.ApplyForce (kickDir, kickStrenght, data.platform);
 	}
 
 

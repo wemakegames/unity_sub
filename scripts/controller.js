@@ -104,7 +104,8 @@ function handleEnd(evt) {
   var lastTouch = evt.changedTouches[0];
 
   var message = "X:  " + startPos.x + "   Y:  " + startPos.y + "      X:  " + lastTouch.pageX + "   Y:  " + lastTouch.pageY + '   Time:   ' + totalTime;
-  g_client.sendCmd('swipe',{ platform: "touch" , startX: startPos.x, startY: startPos.y, endX: lastTouch.pageX, endY: lastTouch.pageY, duration: totalTime});  
+  //g_client.sendCmd('kick',{ platform: "touch" , startX: startPos.x, startY: startPos.y, endX: lastTouch.pageX, endY: lastTouch.pageY, duration: totalTime});  
+  g_client.sendCmd('kick',{ platform: "touch"});  
 }
 
 
@@ -171,8 +172,8 @@ window.addEventListener("mouseup",function(evt){
   var totalTime = newTime - lastTime;
   var mousePos = getMousePos(canvas,evt);
   endPos = mousePos;  
-
-  g_client.sendCmd('drawLine',{ text: "PULLING" });
+   g_client.sendCmd('kick',{ platform: "mouse"});  
+  
 
   player.x = canvas.width/2;
   player.y = canvas.height/2;
