@@ -39,6 +39,10 @@ function handleScore() {
 
 function handleDeath() {
 };
+g_client.addEventListener('score', handleScore);
+g_client.addEventListener('die', handleDeath);
+
+/////////////////////////////////////////////////////////////////////////////
 
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext("2d");
@@ -54,6 +58,19 @@ var dragging;
 var dragHoldX;
 var dragHoldY;
 
+////LISTENERS
+g_client.addEventListener('changeBG', changeBG);
+g_client.addEventListener('myTurn', handleTurn);
+window.addEventListener("touchstart", handleTouchStart, false);
+window.addEventListener("touchend", handleTouchEnd, false);
+
+window.addEventListener("mousedown",mouseDown,false);
+window.addEventListener("mouseup", mouseUp, false);
+
+
+
+/////////
+
 function createPlayer(){
 
   var centerX = canvas.width/2;
@@ -64,18 +81,15 @@ function createPlayer(){
   drawScreen();  
 }
 
-function writeMessage(message) {
-  document.getElementById("debugtext").innerHTML = message;
-}
-
-canvas.addEventListener("touchstart", handleStart, false);
-canvas.addEventListener("touchend", handleEnd, false);
 
 function getTouchPos(canvas, evt) {
-  var rect = canvas.getBoundingClientRect();
+  var bRect = canvas.getBoundingClientRect();
+    mouseX = (evt.pageX - bRect.left)*(canvas.width/bRect.width);
+    mouseY = (evt.pageY - bRect.top)*(canvas.height/bRect.height);   
+  
   return {
-    x: evt.pageX - rect.left,
-    y: evt.pageY - rect.top
+    x: mouseX,
+    y: mouseY
   };
 }
 
@@ -83,90 +97,66 @@ function getMousePos(canvas, evt) {
   var bRect = canvas.getBoundingClientRect();
     mouseX = (evt.clientX - bRect.left)*(canvas.width/bRect.width);
     mouseY = (evt.clientY - bRect.top)*(canvas.height/bRect.height);
+    
   return {
     x: mouseX,
     y: mouseY
   };
 }
 
-function handleStart(evt) {
-    var touchPos = getTouchPos(canvas, evt);
-    startPos = touchPos;
-    lastTime = Date.now();    
-}
-
-function handleEnd(evt) {
-
-  evt.preventDefault(); //prvent mouse movement
-  newTime = Date.now();
-
-  var totalTime = newTime - lastTime;
-  var lastTouch = evt.changedTouches[0];
-
-  var message = "X:  " + startPos.x + "   Y:  " + startPos.y + "      X:  " + lastTouch.pageX + "   Y:  " + lastTouch.pageY + '   Time:   ' + totalTime;
-  //g_client.sendCmd('kick',{ platform: "touch" , startX: startPos.x, startY: startPos.y, endX: lastTouch.pageX, endY: lastTouch.pageY, duration: totalTime});  
-  g_client.sendCmd('kick',{ platform: "touch"});  
-}
-
-
-canvas.addEventListener("mousedown",function(evt){
+function mouseDown(evt) {
   var mousePos = getMousePos(canvas,evt);
   startPos = mousePos;
   lastTime = Date.now();  
-
   if  (hitTest(player, mousePos.x, mousePos.y)) {
     dragging = true;
     dragHoldX = mousePos.x - player.x;
     dragHoldY = mousePos.y - player.y;
-  }
 
+  }
   if (dragging) {
-    window.addEventListener("mousemove", mouseMoveListener, false);
+    window.addEventListener("mousemove", mouseMove, false);
   }
-
-
-});
-
-function mouseMoveListener(evt) {
-    
-    var posX;
-    var posY;    
-    var shapeRad = player.rad
-    var minX = shapeRad;
-    var maxX = canvas.width - shapeRad;
-    var minY = shapeRad;
-    var maxY = canvas.height - shapeRad;
-    //getting mouse position correctly 
-    var bRect = canvas.getBoundingClientRect();
-    mouseX = (evt.clientX - bRect.left)*(canvas.width/bRect.width);
-    mouseY = (evt.clientY - bRect.top)*(canvas.height/bRect.height);
-    
-    //clamp x and y positions to prevent object from dragging outside of canvas
-    posX = mouseX - dragHoldX;
-    posX = (posX < minX) ? minX : ((posX > maxX) ? maxX : posX);
-    posY = mouseY - dragHoldY;
-    posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
-    
-    player.x = posX;
-    player.y = posY;
-    
-    drawScreen();
-  }
-
-function hitTest(shape,mx,my) {
-  var dx;
-  var dy;
-  dx = mx - shape.x;
-  dy = my - shape.y;
-  
-  //a "hit" will be registered if the distance away from the center is less than the radius of the circular object    
-  return (dx*dx + dy*dy < shape.rad*shape.rad);
 }
 
-window.addEventListener("mouseup",function(evt){
+function handleTouchStart(evt) {
+    evt.preventDefault(); //prvent mouse movement
+    var mousePos = getTouchPos(canvas, evt);
+    startPos = mousePos;    
+    
+    if  (hitTest(player, mousePos.x, mousePos.y)) {
+    dragging = true;
+    dragHoldX = mousePos.x - player.x;
+    dragHoldY = mousePos.y - player.y;
+
+  }
+  if (dragging) {
+    window.addEventListener("touchmove", touchMove, false);
+  }
+}
+
+function handleTouchEnd(evt) {
+
+  evt.preventDefault(); //prvent mouse movement  
   if (dragging){
     dragging = false;
-    window.removeEventListener("mousemove", mouseMoveListener, false);
+    //window.removeEventListener("touchmove", touchmove, false);
+  }
+  
+  var mousePos = getMousePos(canvas,evt);
+  endPos = mousePos;  
+  g_client.sendCmd('kick',{ platform: "touch"});  
+  
+  player.x = canvas.width/2;
+  player.y = canvas.height/2;
+
+  drawScreen();  
+}
+
+function mouseUp(evt){
+  if (dragging){
+    dragging = false;
+    window.removeEventListener("mousemove", mouseMove, false);
   }
   newTime = Date.now();
   var totalTime = newTime - lastTime;
@@ -179,10 +169,69 @@ window.addEventListener("mouseup",function(evt){
   player.y = canvas.height/2;
 
   drawScreen();
-});
+};
 
-  g_client.addEventListener('score', handleScore);
-  g_client.addEventListener('die', handleDeath);
+
+function touchMove(evt) {  
+    var posX;
+    var posY;    
+    var shapeRad = player.rad
+    var minX = shapeRad;
+    var maxX = canvas.width - shapeRad;
+    var minY = shapeRad;
+    var maxY = canvas.height - shapeRad;
+    //getting mouse position correctly 
+    var touchPos = getTouchPos(canvas,evt);
+    
+    //clamp x and y positions to prevent object from dragging outside of canvas
+    posX = touchPos.x - dragHoldX;
+    posX = (posX < minX) ? minX : ((posX > maxX) ? maxX : posX);
+    posY = touchPos.y - dragHoldY;
+    posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
+    
+    player.x = posX;
+    player.y = posY;
+    
+    drawScreen();
+  }
+
+function mouseMove(evt) {  
+    var posX;
+    var posY;    
+    var shapeRad = player.rad
+    var minX = shapeRad;
+    var maxX = canvas.width - shapeRad;
+    var minY = shapeRad;
+    var maxY = canvas.height - shapeRad;
+    //getting mouse position correctly 
+    var mousePos = getMousePos(canvas,evt)
+    
+    //clamp x and y positions to prevent object from dragging outside of canvas
+    posX = mousePos.x - dragHoldX;
+    posX = (posX < minX) ? minX : ((posX > maxX) ? maxX : posX);
+    posY = mousePos.y - dragHoldY;
+    posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
+    
+    player.x = posX;
+    player.y = posY;
+    
+    drawScreen();
+  }
+
+function hitTest(shape,mx,my) {
+  var dx;
+  var dy;  
+  dx = mx - shape.x;
+  dy = my - shape.y;  
+  //a "hit" will be registered if the distance away from the center is less than the radius of the circular object    
+  return (dx*dx + dy*dy < shape.rad*shape.rad);
+}
+
+
+function writeMessage(message) {
+  document.getElementById("debugtext").innerHTML = message;
+}
+
 
 
 function drawPlayer(){
@@ -191,9 +240,11 @@ function drawPlayer(){
   context.arc(player.x, player.y, player.rad, 0, 2*Math.PI, false);  
     
   context.fillStyle = "white";
+  
   context.closePath();
   context.fill();  
 }
+
 
 function drawLine() {
   context.beginPath();
@@ -206,8 +257,7 @@ function drawLine() {
 function drawScreen() {
     //bg
     context.fillStyle = bgColor;
-    context.fillRect(0,0,canvas.width,canvas.height);
-    player.fillStyle = "yellow";
+    context.fillRect(0,0,canvas.width,canvas.height);    
     drawPlayer();
     drawLine();
 
@@ -224,9 +274,6 @@ function changeBG(data){
   createPlayer();
 }
 
-g_client.addEventListener('changeBG', changeBG);
-g_client.addEventListener('myTurn', handleTurn);
-
 function handleTurn(data) {
   writeMessage(data.turnText)
 }
@@ -237,6 +284,7 @@ var sendPad = function(e) {
 
   CommonUI.setupStandardControllerUI(g_client, globals);
 });
+
 
 
 

@@ -132,7 +132,7 @@ public class HappyController : MonoBehaviour {
 		kickStrenght = Mathf.Abs(Vector3.Distance(oldEnd,oldStart));
 		kickDir = oldEnd - oldStart;
 		kickStart = gameObject.transform.position;
-		Debug.DrawRay (kickStart, kickDir, Color.cyan, 0.2f, false);
+		Debug.DrawRay (kickStart, kickDir, Color.black, 0.2f, false);
 	}
 
 	void OnKick(MessageKick data) {
