@@ -238,11 +238,16 @@ function drawPlayer(){
 
   context.beginPath();
   context.arc(player.x, player.y, player.rad, 0, 2*Math.PI, false);  
-    
+  
   context.fillStyle = "white";
   
   context.closePath();
   context.fill();  
+
+  var img = new Image();
+  img.src = 'hft-assets/player.png';
+  
+  context.drawImage(img,canvas.width/2 - img.width/2,canvas.height/2 - img.height/2);
 }
 
 
