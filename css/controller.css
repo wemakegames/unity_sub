@@ -29,6 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 #debugtext
 {
   position:relative;
@@ -39,23 +40,8 @@
   background-color: yellow;
 }
 
-#canvas {
-  position:relative;
-  display:block;
-  width:50%;
-  margin: 0 auto 0 auto;
-  height: 50%;
-}
-
-#canvas{
-
-  background-color: black;
-  
-  background-size: 240px 240px;
-  background-repeat: repeat;
-}
 
 body{
 background-image: url(../hft-assets/grass.jpg);
-
+text-align: center;
 }

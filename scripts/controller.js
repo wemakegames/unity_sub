@@ -9,7 +9,6 @@ requirejs(
     'hft/misc/misc',
     'hft/misc/mobilehacks',
     'hft/misc/touch',
-    ''
   ], function(
     CommonUI,
     GameClient,
@@ -45,12 +44,19 @@ g_client.addEventListener('die', handleDeath);
 
 /////////////////////////////////////////////////////////////////////////////
 
-var canvas = document.getElementById('canvas');
+var viewportWidth = window.innerWidth;
+var viewportHeight = window.innerHeight;
+var canvasWidth = window.innerWidth - 100;
+var canvasHeight = window.innerHeight - 100;
+
+canvas.style.position = "absolute";
+canvas.setAttribute("width", canvasWidth);
+canvas.setAttribute("height", canvasHeight);
+canvas.style.top = (viewportHeight - canvasHeight) / 2 + "px";
+canvas.style.left = (viewportWidth - canvasWidth) / 2 + "px";
 var context = canvas.getContext("2d");
-var lastTime;
-var newTime;
 var player;
-var bgColor;
+var playerColor;
 var mouseX;
 var mouseY;
 var dragging;
@@ -60,45 +66,39 @@ var dragHoldY;
 ////LISTENERS
 g_client.addEventListener('changeBG', changeBG);
 g_client.addEventListener('myTurn', handleTurn);
-
-window.load = createPlayer();
 window.addEventListener("touchstart", handleTouchStart, false);
 window.addEventListener("touchend", handleTouchEnd, false);
 
 window.addEventListener("mousedown",mouseDown,false);
 window.addEventListener("mouseup", mouseUp, false);
 
-var player;
 
-var playerWidth = 100;
-var playerHeight = 100;
-var playerX = canvas.width/2 - playerWidth/2;
-var playerY = canvas.height/2 - playerHeight/2;
 
+/////////
+
+window.onresize = function() {
+
+  viewportWidth = window.innerWidth;
+  viewportHeight = window.innerHeight;
+  canvasWidth = window.innerWidth - 50;
+  canvasHeight = window.innerHeight - 50;
+  canvas.setAttribute("width", canvasWidth);
+  canvas.setAttribute("height", canvasHeight);
+  canvas.style.top = (viewportHeight - canvasHeight) / 2 + "px";
+  canvas.style.left = (viewportWidth - canvasWidth) / 2 + "px";
+  drawScreen();
+}
 
 
 function createPlayer(){
 
-  
-  player = new Image();
+  var centerX = canvas.width/2;
+  var centerY = canvas.height/2;
+  var radius = 30;
+  player = {x:centerX, y:centerY, rad:radius};
 
-  player.load = function() {    
-    context.drawImage(player,playerX,playerY);
-    
-    drawScreen();
-
-  }
-  player.src = 'hft-assets/player.png';
-
-
-
+  drawScreen();  
 }
-
-  
-
-/////////
-
-
 
 
 function getTouchPos(canvas, evt) {
@@ -124,12 +124,11 @@ function getMousePos(canvas, evt) {
 }
 
 function mouseDown(evt) {
-  var mousePos = getMousePos(canvas,evt);
-    
+  var mousePos = getMousePos(canvas,evt);  
   if  (hitTest(player, mousePos.x, mousePos.y)) {
     dragging = true;
-    dragHoldX = mousePos.x - playerX;
-    dragHoldY = mousePos.y - playerY;
+    dragHoldX = mousePos.x - player.x;
+    dragHoldY = mousePos.y - player.y;
 
   }
   if (dragging) {
@@ -139,12 +138,11 @@ function mouseDown(evt) {
 
 function handleTouchStart(evt) {
     evt.preventDefault(); //prvent mouse movement
-    var mousePos = getTouchPos(canvas, evt);
-    
+    var mousePos = getTouchPos(canvas, evt);    
     if  (hitTest(player, mousePos.x, mousePos.y)) {
     dragging = true;
-    dragHoldX = mousePos.x - playerX;
-    dragHoldY = mousePos.y - playerY;
+    dragHoldX = mousePos.x - player.x;
+    dragHoldY = mousePos.y - player.y;
 
   }
   if (dragging) {
@@ -160,11 +158,11 @@ function handleTouchEnd(evt) {
     //window.removeEventListener("touchmove", touchmove, false);
   }
   
-  var mousePos = getMousePos(canvas,evt);
+  var mousePos = getMousePos(canvas,evt);  
   g_client.sendCmd('kick',{ platform: "touch"});  
   
-  playerX = canvas.width/2;
-  playerY = canvas.height/2;
+  player.x = canvas.width/2;
+  player.y = canvas.height/2;
 
   drawScreen();  
 }
@@ -173,15 +171,12 @@ function mouseUp(evt){
   if (dragging){
     dragging = false;
     window.removeEventListener("mousemove", mouseMove, false);
-  }
-  newTime = Date.now();
-  var totalTime = newTime - lastTime;
+  } 
   var mousePos = getMousePos(canvas,evt);
-  g_client.sendCmd('kick',{ platform: "mouse"});  
-  
+  g_client.sendCmd('kick',{ platform: "mouse"});   
 
-  playerWidth = canvas.width/2;
-  playerHeight = canvas.height/2;
+  player.x = canvas.width/2;
+  player.y = canvas.height/2;
 
   drawScreen();
 };
@@ -204,8 +199,8 @@ function touchMove(evt) {
     posY = touchPos.y - dragHoldY;
     posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
     
-    playerX = posX;
-    playerY = posY;
+    player.x = posX;
+    player.y = posY;
     
     drawScreen();
   }
@@ -213,7 +208,7 @@ function touchMove(evt) {
 function mouseMove(evt) {  
     var posX;
     var posY;    
-    var shapeRad = playerWidth/2;
+    var shapeRad = player.rad
     var minX = shapeRad;
     var maxX = canvas.width - shapeRad;
     var minY = shapeRad;
@@ -227,8 +222,8 @@ function mouseMove(evt) {
     posY = mousePos.y - dragHoldY;
     posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
     
-    playerX = posX;
-    playerY = posY;
+    player.x = posX;
+    player.y = posY;
     
     drawScreen();
   }
@@ -236,11 +231,10 @@ function mouseMove(evt) {
 function hitTest(shape,mx,my) {
   var dx;
   var dy;  
-  dx = mx - (player.x + playerWidth/2);
-  dy = my - (player.y + playerHeight/2);  
+  dx = mx - shape.x;
+  dy = my - shape.y;  
   //a "hit" will be registered if the distance away from the center is less than the radius of the circular object    
-  return (dx*dx + dy*dy < playerWidth*playerWidth);
-  console.log("hit");
+  return (dx*dx + dy*dy < shape.rad*shape.rad);
 }
 
 
@@ -250,43 +244,64 @@ function writeMessage(message) {
 
 
 
-function drawPlayer(){ 
-  
-  context.drawImage(player,playerX,playerY);
+function drawPlayer(){
+
+  context.beginPath();
+  context.arc(player.x, player.y, player.rad, 0, 2*Math.PI, false);      
+  context.fillStyle = playerColor;  
+  context.closePath();
+  context.fill();  
 }
 
 
 function drawLine() {
   context.beginPath();
-  context.moveTo(playerX,playerY);
+  context.moveTo(player.x,player.y);
   context.lineTo(canvas.width/2,canvas.height/2);
+  context.lineWidth = 10;
+  context.setLineDash([25,5])
+  context.strokeStyle = "white";
   context.stroke();
-  g_client.sendCmd('drawLine',{ platform: "mouse" , playerX: playerX, playerY: playerY, lineEndX: canvas.width/2, lineEndY: canvas.height/2});
-
 }
 
-function drawScreen() {
-    //bg
+function drawContour(){
+
+  var maxSize;
+  if (canvas.height > canvas.width){
+    maxSize =  canvasWidth/2;
+  } else if (canvas.height < canvas.width){
+    maxSize =  canvasHeight/2;
+  } else {
+    maxSize =  canvasWidth/2;
+  }
+
+  context.beginPath();
+  context.arc(canvas.width/2, canvas.height/2, maxSize, 0, 2*Math.PI, false);        
+  context.closePath();
+  context.setLineDash([25,5])
+  context.lineWidth = 5;
+  context.strokeStyle = 'white';
+  context.stroke();
+  
+}
+
+function drawScreen() {      
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = bgColor;
-    context.fillRect(0,0,canvas.width,canvas.height);    
     drawPlayer();
     drawLine();
-    
-    
-    
-
-    
+    drawContour();
+    g_client.sendCmd('drawLine',{ platform: "mouse" , playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2});
   }
 
 
 function changeBG(data){
   if (data.playerTeam = 1) {
-    bgColor = 'red';
+    playerColor = 'red';
   } else if (data.playerTeam = 2) {    
-    bgColor = 'blue';
+    playerColor = 'blue';
   }
   createPlayer();
+
 }
 
 function handleTurn(data) {
