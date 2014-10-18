@@ -30,7 +30,7 @@ public class PlayersMovement : MonoBehaviour {
 
 		_player = GetComponent<HappyController>()._player;
 
-		flickStrenghtMouse = 2.0f;
+		flickStrenghtMouse = 1.0f;
 		flickStrenghtTouch = 1.0f;
 	}
 	
@@ -68,10 +68,13 @@ public class PlayersMovement : MonoBehaviour {
 	}
 
 	void ChangeAlpha(float f){
-		Material m = GetComponent<Renderer> ().material;
-		Color c = m.color;
-		c.a = f;
-		m.color = c;
+		Material m;
+		for (var i = 0; i < GetComponentInChildren<Renderer>().materials.Length; i++) {
+			m = GetComponentInChildren<Renderer> ().materials [i];
+			Color c = m.color;
+			c.a = f;
+			m.color = c;
+		}
 	}
 
 	Vector2 CalcDirection(Vector2 s, Vector2 e){

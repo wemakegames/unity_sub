@@ -224,10 +224,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void ChangeAlpha(float f, GameObject obj){
-		Material m = obj.GetComponent<Renderer> ().material;
-		Color c = m.color;
-		c.a = f;
-		m.color = c;
+		Material m;
+		for (var i = 0; i < obj.GetComponentInChildren<Renderer>().materials.Length; i++) {
+			m = obj.GetComponentInChildren<Renderer> ().materials [i];
+			Color c = m.color;
+			c.a = f;
+			m.color = c;
+		}
 	}
 	
 

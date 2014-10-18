@@ -62,10 +62,10 @@ public class HappySpawner : MonoBehaviour {
 		go.GetComponent<PlayersMovement> ().initialPosition = newPos;
 
 		if (t == 1) {
-			go.GetComponent<Renderer> ().material.color = gameManager.team1Color;
+			go.GetComponentInChildren<Renderer> ().materials[1].color = gameManager.team1Color;
 			go.tag = "playerTeam1";
 		} else if ( t == 2) {
-			go.GetComponent<Renderer> ().material.color = gameManager.team2Color;
+			go.GetComponentInChildren<Renderer> ().materials[1].color = gameManager.team2Color;
 			go.tag = "playerTeam2";
 		}
 
