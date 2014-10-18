@@ -9,6 +9,7 @@ requirejs(
     'hft/misc/misc',
     'hft/misc/mobilehacks',
     'hft/misc/touch',
+    ''
   ], function(
     CommonUI,
     GameClient,
@@ -46,8 +47,6 @@ g_client.addEventListener('die', handleDeath);
 
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext("2d");
-var startPos;
-var endPos;
 var lastTime;
 var newTime;
 var player;
@@ -61,25 +60,45 @@ var dragHoldY;
 ////LISTENERS
 g_client.addEventListener('changeBG', changeBG);
 g_client.addEventListener('myTurn', handleTurn);
+
+window.load = createPlayer();
 window.addEventListener("touchstart", handleTouchStart, false);
 window.addEventListener("touchend", handleTouchEnd, false);
 
 window.addEventListener("mousedown",mouseDown,false);
 window.addEventListener("mouseup", mouseUp, false);
 
+var player;
+
+var playerWidth = 100;
+var playerHeight = 100;
+var playerX = canvas.width/2 - playerWidth/2;
+var playerY = canvas.height/2 - playerHeight/2;
 
 
-/////////
 
 function createPlayer(){
 
-  var centerX = canvas.width/2;
-  var centerY = canvas.height/2;
-  var radius = 10;
-  player = {x:centerX, y:centerY, rad:radius};
+  
+  player = new Image();
 
-  drawScreen();  
+  player.load = function() {    
+    context.drawImage(player,playerX,playerY);
+    
+    drawScreen();
+
+  }
+  player.src = 'hft-assets/player.png';
+
+
+
 }
+
+  
+
+/////////
+
+
 
 
 function getTouchPos(canvas, evt) {
@@ -106,12 +125,11 @@ function getMousePos(canvas, evt) {
 
 function mouseDown(evt) {
   var mousePos = getMousePos(canvas,evt);
-  startPos = mousePos;
-  lastTime = Date.now();  
+    
   if  (hitTest(player, mousePos.x, mousePos.y)) {
     dragging = true;
-    dragHoldX = mousePos.x - player.x;
-    dragHoldY = mousePos.y - player.y;
+    dragHoldX = mousePos.x - playerX;
+    dragHoldY = mousePos.y - playerY;
 
   }
   if (dragging) {
@@ -122,12 +140,11 @@ function mouseDown(evt) {
 function handleTouchStart(evt) {
     evt.preventDefault(); //prvent mouse movement
     var mousePos = getTouchPos(canvas, evt);
-    startPos = mousePos;    
     
     if  (hitTest(player, mousePos.x, mousePos.y)) {
     dragging = true;
-    dragHoldX = mousePos.x - player.x;
-    dragHoldY = mousePos.y - player.y;
+    dragHoldX = mousePos.x - playerX;
+    dragHoldY = mousePos.y - playerY;
 
   }
   if (dragging) {
@@ -144,11 +161,10 @@ function handleTouchEnd(evt) {
   }
   
   var mousePos = getMousePos(canvas,evt);
-  endPos = mousePos;  
   g_client.sendCmd('kick',{ platform: "touch"});  
   
-  player.x = canvas.width/2;
-  player.y = canvas.height/2;
+  playerX = canvas.width/2;
+  playerY = canvas.height/2;
 
   drawScreen();  
 }
@@ -161,12 +177,11 @@ function mouseUp(evt){
   newTime = Date.now();
   var totalTime = newTime - lastTime;
   var mousePos = getMousePos(canvas,evt);
-  endPos = mousePos;  
-   g_client.sendCmd('kick',{ platform: "mouse"});  
+  g_client.sendCmd('kick',{ platform: "mouse"});  
   
 
-  player.x = canvas.width/2;
-  player.y = canvas.height/2;
+  playerWidth = canvas.width/2;
+  playerHeight = canvas.height/2;
 
   drawScreen();
 };
@@ -189,8 +204,8 @@ function touchMove(evt) {
     posY = touchPos.y - dragHoldY;
     posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
     
-    player.x = posX;
-    player.y = posY;
+    playerX = posX;
+    playerY = posY;
     
     drawScreen();
   }
@@ -198,7 +213,7 @@ function touchMove(evt) {
 function mouseMove(evt) {  
     var posX;
     var posY;    
-    var shapeRad = player.rad
+    var shapeRad = playerWidth/2;
     var minX = shapeRad;
     var maxX = canvas.width - shapeRad;
     var minY = shapeRad;
@@ -212,8 +227,8 @@ function mouseMove(evt) {
     posY = mousePos.y - dragHoldY;
     posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
     
-    player.x = posX;
-    player.y = posY;
+    playerX = posX;
+    playerY = posY;
     
     drawScreen();
   }
@@ -221,10 +236,11 @@ function mouseMove(evt) {
 function hitTest(shape,mx,my) {
   var dx;
   var dy;  
-  dx = mx - shape.x;
-  dy = my - shape.y;  
+  dx = mx - (player.x + playerWidth/2);
+  dy = my - (player.y + playerHeight/2);  
   //a "hit" will be registered if the distance away from the center is less than the radius of the circular object    
-  return (dx*dx + dy*dy < shape.rad*shape.rad);
+  return (dx*dx + dy*dy < playerWidth*playerWidth);
+  console.log("hit");
 }
 
 
@@ -234,39 +250,33 @@ function writeMessage(message) {
 
 
 
-function drawPlayer(){
-
-  context.beginPath();
-  context.arc(player.x, player.y, player.rad, 0, 2*Math.PI, false);  
+function drawPlayer(){ 
   
-  context.fillStyle = "white";
-  
-  context.closePath();
-  context.fill();  
-
-  var img = new Image();
-  img.src = 'hft-assets/player.png';
-  
-  context.drawImage(img,canvas.width/2 - img.width/2,canvas.height/2 - img.height/2);
+  context.drawImage(player,playerX,playerY);
 }
 
 
 function drawLine() {
   context.beginPath();
-  context.moveTo(player.x,player.y);
+  context.moveTo(playerX,playerY);
   context.lineTo(canvas.width/2,canvas.height/2);
   context.stroke();
+  g_client.sendCmd('drawLine',{ platform: "mouse" , playerX: playerX, playerY: playerY, lineEndX: canvas.width/2, lineEndY: canvas.height/2});
 
 }
 
 function drawScreen() {
     //bg
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = bgColor;
     context.fillRect(0,0,canvas.width,canvas.height);    
     drawPlayer();
     drawLine();
+    
+    
+    
 
-    g_client.sendCmd('drawLine',{ platform: "mouse" , playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2});
+    
   }
 
 
