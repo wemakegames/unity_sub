@@ -8,13 +8,13 @@ public class PlayerLineRenderer : MonoBehaviour {
 	public Color c1 = Color.yellow;
 
 
-	public GameManager gameManager;
+	private GameManager gameManager;
 	private int lengthOfLineRenderer = 2;
 
 	void Start() {
 
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+		lineRenderer.material = new Material(Shader.Find("Particles/Alpha Blended"));
 		lineRenderer.SetColors(c1, c1);
 		lineRenderer.SetWidth(1.0f, 1.0f);
 		lineRenderer.SetVertexCount(lengthOfLineRenderer);

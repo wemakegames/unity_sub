@@ -48,11 +48,12 @@ public class HappyController : MonoBehaviour {
 
 	[CmdName("drawLine")]
 	class MessageDrawLine : HappyFunTimes.MessageCmdData {
-		public string platform = "";
+		public string platform;
 		public int playerX = 0;
 		public int playerY = 0;
 		public int lineEndX = 0;
 		public int lineEndY = 0;
+		public float strength = 0;
 	};
 
 
@@ -132,20 +133,18 @@ public class HappyController : MonoBehaviour {
 		Vector3 oldStart = new Vector3(data.playerX, 0, -data.playerY);
 		Vector3 oldEnd = new Vector3(data.lineEndX,0, -data.lineEndY);
 
-		kickStrenght = Mathf.Abs(Vector3.Distance(oldEnd,oldStart));
+		kickStrenght = data.strength;
 		kickDir = oldEnd - oldStart;
 		kickStart = gameObject.transform.position;
 
 		Ray r = new Ray(kickStart,kickDir);
-		Vector3 rp = r.GetPoint (30);
+		Vector3 rp = r.GetPoint (data.strength / 6);
 		playerLineRenderer.DrawPlayerLine (rp);
 		//Debug.DrawRay (kickStart, kickDir, Color.black, 0.2f, false);
-
 	}
 
 	void OnKick(MessageKick data) {
-		Debug.Log (data.platform);
-		playerMovement.ApplyForce (kickDir, kickStrenght, data.platform);
+		playerMovement.ApplyForce (kickDir, kickStrenght);
 	}
 
 

@@ -63,6 +63,8 @@ var dragging;
 var dragHoldX;
 var dragHoldY;
 
+var actionMaxRadius;
+
 ////LISTENERS
 g_client.addEventListener('changeBG', changeBG);
 g_client.addEventListener('myTurn', handleTurn);
@@ -265,17 +267,15 @@ function drawLine() {
 
 function drawContour(){
 
-  var maxSize;
-  if (canvas.height > canvas.width){
-    maxSize =  canvasWidth/2;
-  } else if (canvas.height < canvas.width){
-    maxSize =  canvasHeight/2;
+  //check screen ratio  
+  if (canvas.height < canvas.width){
+    actionMaxRadius =  canvasHeight/2 - ((canvasHeight/100) * 5);
   } else {
-    maxSize =  canvasWidth/2;
+    actionMaxRadius =  canvasWidth/2  - ((canvasWidth/100) * 5);
   }
 
   context.beginPath();
-  context.arc(canvas.width/2, canvas.height/2, maxSize, 0, 2*Math.PI, false);        
+  context.arc(canvas.width/2, canvas.height/2, actionMaxRadius, 0, 2*Math.PI, false);        
   context.closePath();
   context.setLineDash([25,5])
   context.lineWidth = 5;
@@ -285,12 +285,34 @@ function drawContour(){
 }
 
 function drawScreen() {      
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    drawPlayer();
-    drawLine();
-    drawContour();
-    g_client.sendCmd('drawLine',{ platform: "mouse" , playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2});
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  drawPlayer();
+  drawLine();
+  drawContour();
+  var kickStrength = adjustStrengthRatio();  
+  g_client.sendCmd('drawLine',{playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2, strength: kickStrength});
+}
+
+function adjustStrengthRatio() {
+
+  var realDistance = lineDistance();
+  var radiusUnit = actionMaxRadius / 100;
+  
+  if (realDistance/radiusUnit > 100) {
+
+    return 100;
+  } else {
+    return realDistance / radiusUnit;
   }
+}
+
+function lineDistance()
+{
+  var xd = player.x - canvasWidth/2;
+  var yd = player.y - canvasHeight/2;
+ 
+  return Math.sqrt( xd*xd + yd*yd );
+}
 
 
 function changeBG(data){

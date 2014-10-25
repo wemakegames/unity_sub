@@ -180,7 +180,7 @@ Rigidbody:
   m_GameObject: {fileID: 100008}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 1
+  m_Drag: 0
   m_AngularDrag: .0500000007
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b6b57bad7d3af4fa11b964d4f42dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 100
+  maxStrength: 75
   canPlay: 1
   hasPlayed: 0
   initialPosition: {x: -12.1829996, y: 1, z: -8.15999985}
@@ -301,8 +301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   c1: {r: 1, g: .921568632, b: .0156862754, a: 1}
-  c2: {r: 1, g: 0, b: 0, a: 1}
-  lengthOfLineRenderer: 20
+  gameManager: {fileID: 0}
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1
