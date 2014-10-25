@@ -86,6 +86,8 @@ window.onresize = function() {
   canvas.setAttribute("height", canvasHeight);
   canvas.style.top = (viewportHeight - canvasHeight) / 2 + "px";
   canvas.style.left = (viewportWidth - canvasWidth) / 2 + "px";
+  player.x = canvasWidth/2;
+  player.y = canvasHeight/2;
   drawScreen();
 }
 
@@ -237,12 +239,9 @@ function hitTest(shape,mx,my) {
   return (dx*dx + dy*dy < shape.rad*shape.rad);
 }
 
-
 function writeMessage(message) {
   document.getElementById("debugtext").innerHTML = message;
 }
-
-
 
 function drawPlayer(){
 
