@@ -80,6 +80,7 @@ GameObject:
   - 114: {fileID: 11400006}
   - 54: {fileID: 5400000}
   - 65: {fileID: 6500000}
+  - 114: {fileID: 11400010}
   m_Layer: 0
   m_Name: subbuteoPlayer
   m_TagString: Untagged
@@ -288,6 +289,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e848ab683a3e408439c952c025840516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66a973e6597304243ae4972357e45d4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  c1: {r: 1, g: .921568632, b: .0156862754, a: 1}
+  c2: {r: 1, g: 0, b: 0, a: 1}
+  lengthOfLineRenderer: 20
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1

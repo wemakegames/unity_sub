@@ -13,6 +13,7 @@ public class HappyController : MonoBehaviour {
 	private Vector3 kickDir;
 	private float kickStrenght;
 
+	private PlayerLineRenderer playerLineRenderer;
 
 	[CmdName("pad")]
 	class MessagePad : HappyFunTimes.MessageCmdData {
@@ -47,11 +48,11 @@ public class HappyController : MonoBehaviour {
 
 	[CmdName("drawLine")]
 	class MessageDrawLine : HappyFunTimes.MessageCmdData {
-		public string platform;
-		public int playerX;
-		public int playerY;
-		public int lineEndX;
-		public int lineEndY;
+		public string platform = "";
+		public int playerX = 0;
+		public int playerY = 0;
+		public int lineEndX = 0;
+		public int lineEndY = 0;
 	};
 
 
@@ -69,6 +70,8 @@ public class HappyController : MonoBehaviour {
 		_player.RegisterCmdHandler<MessageSetName>(OnSetName);
 		_player.RegisterCmdHandler<MessageBusy>(OnBusy);
 		_player.RegisterCmdHandler<MessageDrawLine>(OnDrawLine);
+
+		playerLineRenderer = gameObject.GetComponent<PlayerLineRenderer> ();
 
 	}
 
@@ -132,7 +135,12 @@ public class HappyController : MonoBehaviour {
 		kickStrenght = Mathf.Abs(Vector3.Distance(oldEnd,oldStart));
 		kickDir = oldEnd - oldStart;
 		kickStart = gameObject.transform.position;
-		Debug.DrawRay (kickStart, kickDir, Color.black, 0.2f, false);
+
+		Ray r = new Ray(kickStart,kickDir);
+		Vector3 rp = r.GetPoint (30);
+		playerLineRenderer.DrawPlayerLine (rp);
+		//Debug.DrawRay (kickStart, kickDir, Color.black, 0.2f, false);
+
 	}
 
 	void OnKick(MessageKick data) {

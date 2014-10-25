@@ -54,14 +54,17 @@ public class GameManager : MonoBehaviour {
 		turnAnnouncerContainer.SetActive(false);
 
 		waitingUIContainer = GameObject.Find ("WaitingUI");
+
 		waitingTeam1 = GameObject.Find ("waitingTeam1").GetComponent<Text>();
 		waitingTeam2 = GameObject.Find ("waitingTeam2").GetComponent<Text>();
-		waitingUIContainer.SetActive(true);
+
 
 		activePlayerIndexTeam1 = 0;
 		activePlayerIndexTeam2 = 0;
 
 		nextTeam = 1;
+
+
 	}
 	
 	// Update is called once per frame
@@ -193,8 +196,8 @@ public class GameManager : MonoBehaviour {
 			return 0;
 			
 		} else if (team.Length == 0){
-			return 0;
 			Debug.Log ("error, no players in team");
+			return 0;
 		} else {
 			return playerIndex + 1;
 		}
@@ -225,8 +228,8 @@ public class GameManager : MonoBehaviour {
 
 	void ChangeAlpha(float f, GameObject obj){
 		Material m;
-		for (var i = 0; i < obj.GetComponentInChildren<Renderer>().materials.Length; i++) {
-			m = obj.GetComponentInChildren<Renderer> ().materials [i];
+		for (var i = 0; i < obj.transform.FindChild("player").renderer.materials.Length; i++) {
+			m = obj.transform.FindChild("player").renderer.materials [i];
 			Color c = m.color;
 			c.a = f;
 			m.color = c;

@@ -69,8 +69,8 @@ public class PlayersMovement : MonoBehaviour {
 
 	void ChangeAlpha(float f){
 		Material m;
-		for (var i = 0; i < GetComponentInChildren<Renderer>().materials.Length; i++) {
-			m = GetComponentInChildren<Renderer> ().materials [i];
+		for (var i = 0; i < transform.FindChild("player").renderer.materials.Length; i++) {
+			m = transform.FindChild("player").renderer.materials[i];
 			Color c = m.color;
 			c.a = f;
 			m.color = c;

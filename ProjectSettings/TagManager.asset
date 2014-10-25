@@ -10,6 +10,7 @@ TagManager:
   - playerTeam2
   - SpawnPointTeam1
   - SpawnPointTeam2
+  - MainUI
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
