@@ -3390,7 +3390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shake: 0
   shakeAmount: .100000001
-  decreaseFactor: 2
+  decreaseFactor: 1.5
 --- !u!1 &1684647425
 GameObject:
   m_ObjectHideFlags: 0

@@ -51,7 +51,7 @@ public class PlayersMovement : MonoBehaviour {
 		if (canPlay) {
 			soundManager.PlaySound ("FingerPlay");
 			rigidbody.AddForce(kickDir * ((strength/100) * maxStrength));
-			cameraShake.shake = 0.05f;
+			cameraShake.shake = 0.03f;
 			ChangeAlpha(0.25f);
 			canPlay = false;
 			hasPlayed = true;
