@@ -79,7 +79,6 @@ GameObject:
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400006}
   - 54: {fileID: 5400000}
-  - 65: {fileID: 6500000}
   - 114: {fileID: 11400010}
   m_Layer: 0
   m_Name: subbuteoPlayer
@@ -98,6 +97,7 @@ GameObject:
   - 4: {fileID: 400004}
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
+  - 64: {fileID: 6400000}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -180,25 +180,26 @@ Rigidbody:
   m_GameObject: {fileID: 100008}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 4
   m_AngularDrag: .0500000007
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
---- !u!65 &6500000
-BoxCollider:
+--- !u!64 &6400000
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100008}
+  m_GameObject: {fileID: 100010}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3, y: 3, z: 3}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_SmoothSphereCollisions: 0
+  m_Convex: 0
+  m_Mesh: {fileID: 4300000, guid: 47bfb90287a5c44499bf987ef0bc2559, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -274,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b6b57bad7d3af4fa11b964d4f42dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxStrength: 75
+  maxStrength: 10
   canPlay: 1
   hasPlayed: 0
   initialPosition: {x: -12.1829996, y: 1, z: -8.15999985}
@@ -301,7 +302,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   c1: {r: 1, g: .921568632, b: .0156862754, a: 1}
-  gameManager: {fileID: 0}
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1
