@@ -130,31 +130,15 @@ public class GameManager : MonoBehaviour {
 			if (gameState == "start") {
 				c = Color.white;
 				t = "Kick Off!";
-			} else {
-				switch (nextTeam){
-				case 1:
-					c = team1Color;
-					t = team1Name;
-					break;
-					
-				case 2:
-					c = team2Color;
-					t = team2Name;
-					break;
-				}
+				turnAnnouncerContainer.SetActive(true);
+				turnAnnouncer.color = c;
+				turnAnnouncer.text = t;
+				soundManager.PlaySound ("goal");
+				yield return new WaitForSeconds(2);
+				
+				turnAnnouncerContainer.SetActive(false);
 			}
-			
-			turnAnnouncerContainer.SetActive(true);
-			
-			soundManager.PlaySound ("goal");
-			
-			turnAnnouncer.color = c;
-			turnAnnouncer.text = t;
-			
-			yield return new WaitForSeconds(2);
-			
-			turnAnnouncerContainer.SetActive(false);
-			
+
 			SetNewActivePlayer(nextTeam);
 			
 			if (nextTeam == 1) {
