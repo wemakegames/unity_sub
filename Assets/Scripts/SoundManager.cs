@@ -5,6 +5,7 @@ public class SoundManager : MonoBehaviour {
 
 	public AudioClip sndGoal;
 	public AudioClip sndBallHit;
+	public AudioClip[] sndFingerPlay;
 
 	// Use this for initialization
 	void Start () {
@@ -26,8 +27,11 @@ public class SoundManager : MonoBehaviour {
 			break;
 
 			case ("BallHit"):
-
 			clip = sndBallHit;
+			break;
+
+			case ("FingerPlay"):
+			clip = sndFingerPlay[Random.Range(0,3)];
 			break;
 		
 			default:

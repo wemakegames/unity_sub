@@ -8,6 +8,9 @@ public class PlayersMovement : MonoBehaviour {
 	public bool hasPlayed;
 	public Vector3 initialPosition;
 
+	private SoundManager soundManager;
+	private CameraShake cameraShake;
+
 	private NetPlayer _player;
 	
 	[CmdName ("myTurn")]
@@ -27,6 +30,9 @@ public class PlayersMovement : MonoBehaviour {
 		ChangeAlpha (0.25f);
 
 		_player = GetComponent<HappyController>()._player;
+
+		soundManager = GameObject.Find("GameManager").GetComponent<SoundManager> ();
+		cameraShake = GameObject.Find ("Main Camera").GetComponent<CameraShake> ();
 	}
 	
 	// Update is called once per frame
@@ -43,8 +49,9 @@ public class PlayersMovement : MonoBehaviour {
 
 	public void ApplyForce(Vector3 kickDir, float strength){
 		if (canPlay) {
+			soundManager.PlaySound ("FingerPlay");
 			rigidbody.AddForce(kickDir * ((strength/100) * maxStrength));
-
+			cameraShake.shake = 0.05f;
 			ChangeAlpha(0.25f);
 			canPlay = false;
 			hasPlayed = true;

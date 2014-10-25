@@ -2905,6 +2905,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sndGoal: {fileID: 8300000, guid: f778109bf6a866a45a88132ead67350d, type: 3}
   sndBallHit: {fileID: 8300000, guid: 45e52ded129742f44af85428cf642539, type: 3}
+  sndFingerPlay:
+  - {fileID: 8300000, guid: b92aec52c9d07aa429c8bb3bada50ea6, type: 3}
+  - {fileID: 8300000, guid: 617a5124287e5a74da91c2d8b2d3d09a, type: 3}
+  - {fileID: 8300000, guid: 0a3e8d639f2555e4695bccbafa0fe63c, type: 3}
 --- !u!114 &1418962459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3300,6 +3304,7 @@ GameObject:
   - 92: {fileID: 1536316149}
   - 124: {fileID: 1536316148}
   - 81: {fileID: 1536316147}
+  - 114: {fileID: 1536316152}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3372,6 +3377,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &1536316152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1536316146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4411f61bccb49a54ebe3299685b76681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shake: 0
+  shakeAmount: .100000001
+  decreaseFactor: 2
 --- !u!1 &1684647425
 GameObject:
   m_ObjectHideFlags: 0
