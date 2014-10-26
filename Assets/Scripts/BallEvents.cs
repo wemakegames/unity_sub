@@ -32,8 +32,6 @@ public class BallEvents : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		if (collision.transform.tag == "playerTeam1" || collision.transform.tag == "playerTeam2"){
-			Debug.Log("baball");
-
 			Vector3 vF = collision.rigidbody.velocity;
 			float i;
 			if (vF.x > vF.z){
