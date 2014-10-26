@@ -66,7 +66,7 @@ var dragHoldY;
 var actionMaxRadius;
 
 ////LISTENERS
-g_client.addEventListener('changeBG', changeBG);
+g_client.addEventListener('setPlayerColor', setPlayerColor);
 g_client.addEventListener('myTurn', handleTurn);
 window.addEventListener("touchstart", handleTouchStart, false);
 window.addEventListener("touchend", handleTouchEnd, false);
@@ -162,8 +162,8 @@ function handleTouchEnd(evt) {
     //window.removeEventListener("touchmove", touchmove, false);
   }
   
-  var mousePos = getMousePos(canvas,evt);  
-  g_client.sendCmd('kick',{ platform: "touch"});  
+  var mousePos = getTouchPos(canvas,evt);  
+  g_client.sendCmd('kick');  
   
   player.x = canvas.width/2;
   player.y = canvas.height/2;
@@ -177,7 +177,7 @@ function mouseUp(evt){
     window.removeEventListener("mousemove", mouseMove, false);
   } 
   var mousePos = getMousePos(canvas,evt);
-  g_client.sendCmd('kick',{ platform: "mouse"});   
+  g_client.sendCmd('kick');   
 
   player.x = canvas.width/2;
   player.y = canvas.height/2;
@@ -303,7 +303,7 @@ function drawLine() {
   context.lineTo(canvas.width/2,canvas.height/2);
   context.lineWidth = 10;
   context.setLineDash([25,5])
-  context.strokeStyle = "white";
+  context.strokeStyle = playerColor;
   context.stroke();
 }
 
@@ -321,7 +321,7 @@ function drawContour(){
   context.closePath();
   context.setLineDash([25,5])
   context.lineWidth = 5;
-  context.strokeStyle = 'white';
+  context.strokeStyle = playerColor;
   context.stroke();
   
 }
@@ -331,7 +331,8 @@ function drawScreen() {
   drawPlayer();
   drawLine();
   drawContour();
-  var kickStrength = adjustStrengthRatio();  
+  var kickStrength = adjustStrengthRatio();
+  writeMessage(kickStrength);
   g_client.sendCmd('drawLine',{playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2, strength: kickStrength});
 }
 
@@ -357,18 +358,20 @@ function lineDistance()
 }
 
 
-function changeBG(data){
-  if (data.playerTeam = 1) {
-    playerColor = 'red';
-  } else if (data.playerTeam = 2) {    
+function setPlayerColor(data){
+  
+  if (data.playerTeam == 1) {
+    playerColor = 'red';    
+  } else if (data.playerTeam == 2) {        
     playerColor = 'blue';
   }
+  
   createPlayer();
 
 }
 
 function handleTurn(data) {
-  writeMessage(data.turnText)
+  //writeMessage(data.turnText)
 }
 
 var sendPad = function(e) {

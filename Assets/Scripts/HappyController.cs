@@ -11,7 +11,9 @@ public class HappyController : MonoBehaviour {
 
 	private Vector3 kickStart;
 	private Vector3 kickDir;
-	private float kickStrenght;
+	private float kickStrength;
+
+	private HappySpawner happySpawner;
 
 	private PlayerLineRenderer playerLineRenderer;
 
@@ -23,7 +25,7 @@ public class HappyController : MonoBehaviour {
 
 	[CmdName("kick")]
 	class MessageKick : HappyFunTimes.MessageCmdData {
-		public string platform;
+
 	};
 	
 	[CmdName("setColor")]
@@ -56,11 +58,20 @@ public class HappyController : MonoBehaviour {
 		public float strength = 0;
 	};
 
+	[CmdName ("setPlayerColor")]
+	private class setPlayerColor : MessageCmdData {
+
+		public setPlayerColor(int _team) {
+			playerTeam = _team;
+		}		
+		public int playerTeam;
+	};
+
 
 	public NetPlayer _player;
 	DPadEmuJS _padEmu;
 	
-	void Start () {
+	void Start() {
 
 		playerMovement = GetComponent<PlayersMovement> ();
 
@@ -72,8 +83,19 @@ public class HappyController : MonoBehaviour {
 		_player.RegisterCmdHandler<MessageBusy>(OnBusy);
 		_player.RegisterCmdHandler<MessageDrawLine>(OnDrawLine);
 
+		happySpawner = GameObject.Find("GameManager").GetComponent<HappySpawner>();
+
 		playerLineRenderer = gameObject.GetComponent<PlayerLineRenderer> ();
 
+		//change phone bg
+		int t = 0;
+
+		if (happySpawner.GetPlayerTeam() == 1) {
+			t = 1;
+		} else if (happySpawner.GetPlayerTeam() == 2) {
+			t = 2;
+		}
+		_player.SendCmd (new setPlayerColor (t));	
 	}
 
 	void Update () {
@@ -136,7 +158,7 @@ public class HappyController : MonoBehaviour {
 			Vector3 oldStart = new Vector3 (data.playerX, 0, -data.playerY);
 			Vector3 oldEnd = new Vector3 (data.lineEndX, 0, -data.lineEndY);
 
-			kickStrenght = data.strength;
+			kickStrength = data.strength;
 			kickDir = oldEnd - oldStart;
 			kickStart = gameObject.transform.position;
 
@@ -151,7 +173,7 @@ public class HappyController : MonoBehaviour {
 	}
 
 	void OnKick(MessageKick data) {
-		playerMovement.ApplyForce (kickDir, kickStrenght);
+		playerMovement.ApplyForce (kickDir, kickStrength);
 	}
 
 

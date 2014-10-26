@@ -16,15 +16,7 @@ public class HappySpawner : MonoBehaviour {
 
 	public NetPlayer _player;
 
-	[CmdName ("changeBG")]
-	private class MessageChangeBG : MessageCmdData {
-		public int playerTeam;
-		public MessageChangeBG(int _team) {
-			playerTeam = _team;
-			Debug.Log ("team  " + playerTeam);
-		}		
 
-	};
 
 
 
@@ -73,12 +65,9 @@ public class HappySpawner : MonoBehaviour {
 		var player = go.GetComponent<HappyController>();
 		player.Init(e.netPlayer, "Player" + (++playerCount));
 		_player = go.GetComponent<HappyController>()._player;
-
-		//change phone bg
-		_player.SendCmd (new MessageChangeBG (GetPlayerTeam()));	
 	}
 
-	int GetPlayerTeam (){
+	public int GetPlayerTeam (){
 		if (playerCount % 2 == 0) {
 			return 1;
 		} else {
