@@ -3997,7 +3997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b853458b926008441a99a65b92d2728d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sndGoal: {fileID: 8300000, guid: f778109bf6a866a45a88132ead67350d, type: 3}
+  sndWhistleLong: {fileID: 8300000, guid: f86db3e39c71c6e4989cfc520466c817, type: 3}
+  sndWhistleShort: {fileID: 8300000, guid: f778109bf6a866a45a88132ead67350d, type: 3}
   sndBallHit: {fileID: 8300000, guid: 45e52ded129742f44af85428cf642539, type: 3}
   sndCrowd: {fileID: 8300000, guid: a8a05d0a5ce44ac4aa5dd2e62317108c, type: 3}
   sndFingerPlay:
