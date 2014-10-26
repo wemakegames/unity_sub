@@ -152,7 +152,7 @@ public class HappyController : MonoBehaviour {
 
 	void OnDrawLine (MessageDrawLine data){
 
-		Vector3 rp;
+		Vector3 rp1,rp2;
 
 		if (playerMovement.canPlay) {
 			Vector3 oldStart = new Vector3 (data.playerX, 0, -data.playerY);
@@ -163,11 +163,13 @@ public class HappyController : MonoBehaviour {
 			kickStart = gameObject.transform.position;
 
 			Ray r = new Ray (kickStart, kickDir.normalized);
-			rp = r.GetPoint (data.strength / 6);
+			rp1 = r.GetPoint (data.strength / 8);
+			rp2 = r.GetPoint (data.strength / 6);
 		} else {
-			rp = gameObject.transform.position;
+			rp1 = gameObject.transform.position;
+			rp2 = gameObject.transform.position;
 		}
-			playerLineRenderer.DrawPlayerLine (rp);
+			playerLineRenderer.DrawPlayerLine (rp1,rp2);
 			//Debug.DrawRay (kickStart, kickDir, Color.black, 0.2f, false);
 		
 	}
