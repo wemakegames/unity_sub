@@ -48,7 +48,6 @@ public class GameManager : MonoBehaviour {
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
 		blueCounter = GameObject.Find ("CounterBlueText").GetComponent<Text>();
 		soundManager = GetComponent<SoundManager> ();
-		//soundManager.PlaySound ("goal");
 
 		turnAnnouncerContainer = GameObject.Find ("TurnAnnouncer");
 		turnAnnouncerContainer.SetActive(false);
@@ -133,14 +132,13 @@ public class GameManager : MonoBehaviour {
 				turnAnnouncerContainer.SetActive(true);
 				turnAnnouncer.color = c;
 				turnAnnouncer.text = t;
-				soundManager.PlaySound ("goal");
-				yield return new WaitForSeconds(2);
-				
+				soundManager.PlaySound ("WhistleLong");
+				yield return new WaitForSeconds(2);				
 				turnAnnouncerContainer.SetActive(false);
+			} else {
+				soundManager.PlaySound ("WhistleShort");
 			}
-
-			SetNewActivePlayer(nextTeam);
-			
+			SetNewActivePlayer(nextTeam);			
 			if (nextTeam == 1) {
 				gameState = "team1";
 				nextTeam = 2;

@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿// CROWD SOUND IS PLAYED BY A SEPARATE SOUND SOURCE IN GAME MANAGER
+
+using UnityEngine;
 using System.Collections;
 
 public class SoundManager : MonoBehaviour {
 
-	public AudioClip sndGoal;
+	public AudioClip sndWhistleLong;
+	public AudioClip sndWhistleShort;
 	public AudioClip sndBallHit;
+	public AudioClip sndCrowd;
 	public AudioClip[] sndFingerPlay;
 
 	// Use this for initialization
@@ -22,8 +26,12 @@ public class SoundManager : MonoBehaviour {
 
 		switch (evt)
 		{
-			case ("goal"):
-			clip = sndGoal;
+			case ("WhistleShort"):
+			clip = sndWhistleShort;
+			break;
+
+			case ("WhistleLong"):
+			clip = sndWhistleLong;
 			break;
 
 			case ("BallHit"):
@@ -33,12 +41,11 @@ public class SoundManager : MonoBehaviour {
 			case ("FingerPlay"):
 			clip = sndFingerPlay[Random.Range(0,3)];
 			break;
-		
+
 			default:
 			Debug.Log("!!! Sound not recognized !!!");
 			break;
 		}
-
 		AudioSource.PlayClipAtPoint (clip, transform.position);
 
 	}
