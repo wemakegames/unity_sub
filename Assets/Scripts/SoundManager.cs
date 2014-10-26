@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour {
 
 	public AudioClip sndWhistleLong;
 	public AudioClip sndWhistleShort;
+	public AudioClip sndPlayerConnect;
 	public AudioClip sndBallHit;
 	public AudioClip sndCrowd;
 	public AudioClip[] sndFingerPlay;
@@ -32,6 +33,10 @@ public class SoundManager : MonoBehaviour {
 
 			case ("WhistleLong"):
 			clip = sndWhistleLong;
+			break;
+
+			case ("PlayerConnect"):
+			clip = sndPlayerConnect;
 			break;
 
 			case ("BallHit"):

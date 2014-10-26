@@ -2016,7 +2016,7 @@ ParticleSystem:
         rgba: 2130706431
       minMaxState: 0
     startSize:
-      scalar: 25
+      scalar: 30
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2031,7 +2031,7 @@ ParticleSystem:
         serializedVersion: 2
         m_Curve:
         - time: 0
-          value: .400000006
+          value: .50000006
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -2211,10 +2211,10 @@ ParticleSystem:
           rgba: 16777215
         key1:
           serializedVersion: 2
-          rgba: 3187671039
+          rgba: 3254779903
         key2:
           serializedVersion: 2
-          rgba: 0
+          rgba: 3355443200
         key3:
           serializedVersion: 2
           rgba: 0
@@ -2239,15 +2239,15 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 30455
-        atime2: 65535
+        atime1: 22937
+        atime2: 35466
         atime3: 65535
         atime4: 65535
         atime5: 0
         atime6: 0
         atime7: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         key0:
           serializedVersion: 2
@@ -3999,6 +3999,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sndWhistleLong: {fileID: 8300000, guid: f86db3e39c71c6e4989cfc520466c817, type: 3}
   sndWhistleShort: {fileID: 8300000, guid: f778109bf6a866a45a88132ead67350d, type: 3}
+  sndPlayerConnect: {fileID: 8300000, guid: 2a75ea8333e38254498bb575609655d1, type: 3}
   sndBallHit: {fileID: 8300000, guid: 45e52ded129742f44af85428cf642539, type: 3}
   sndCrowd: {fileID: 8300000, guid: a8a05d0a5ce44ac4aa5dd2e62317108c, type: 3}
   sndFingerPlay:

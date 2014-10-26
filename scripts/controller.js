@@ -331,8 +331,7 @@ function drawScreen() {
   drawPlayer();
   drawLine();
   drawContour();
-  var kickStrength = adjustStrengthRatio();
-  writeMessage(kickStrength);
+  var kickStrength = adjustStrengthRatio();  
   g_client.sendCmd('drawLine',{playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2, strength: kickStrength});
 }
 
@@ -371,7 +370,7 @@ function setPlayerColor(data){
 }
 
 function handleTurn(data) {
-  //writeMessage(data.turnText)
+  writeMessage(data.turnText)
 }
 
 var sendPad = function(e) {

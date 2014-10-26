@@ -162,7 +162,7 @@ public class HappyController : MonoBehaviour {
 			kickDir = oldEnd - oldStart;
 			kickStart = gameObject.transform.position;
 
-			Ray r = new Ray (kickStart, kickDir);
+			Ray r = new Ray (kickStart, kickDir.normalized);
 			rp = r.GetPoint (data.strength / 6);
 		} else {
 			rp = gameObject.transform.position;
@@ -173,7 +173,7 @@ public class HappyController : MonoBehaviour {
 	}
 
 	void OnKick(MessageKick data) {
-		playerMovement.ApplyForce (kickDir, kickStrength);
+		playerMovement.ApplyForce (kickDir.normalized, kickStrength);
 	}
 
 

@@ -33,6 +33,8 @@ public class PlayersMovement : MonoBehaviour {
 
 		soundManager = GameObject.Find("GameManager").GetComponent<SoundManager> ();
 		cameraShake = GameObject.Find ("Main Camera").GetComponent<CameraShake> ();
+
+		soundManager.PlaySound ("PlayerConnect");
 	}
 	
 	// Update is called once per frame
@@ -47,13 +49,13 @@ public class PlayersMovement : MonoBehaviour {
 		}
 	}
 
-	public void ApplyForce(Vector3 kickDir, float strength){
+	public void ApplyForce(Vector3 kickDir, float strength){			
 		if (canPlay) {
+			canPlay = false;
 			soundManager.PlaySound ("FingerPlay");
 			rigidbody.AddForce(kickDir * ((strength/100) * maxStrength));
 			cameraShake.shake = 0.03f;
 			ChangeAlpha(0.25f);
-			canPlay = false;
 			hasPlayed = true;
 		}
 

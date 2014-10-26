@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b6b57bad7d3af4fa11b964d4f42dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxStrength: 10
+  maxStrength: 3500
   canPlay: 1
   hasPlayed: 0
   initialPosition: {x: -12.1829996, y: 1, z: -8.15999985}
