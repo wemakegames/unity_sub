@@ -98,7 +98,7 @@ function createPlayer(){
 
   var centerX = canvas.width/2;
   var centerY = canvas.height/2;
-  var radius = 30;
+  var radius = 50;
   player = {x:centerX, y:centerY, rad:radius};
 
   drawScreen();  
@@ -250,6 +250,48 @@ function drawPlayer(){
   context.beginPath();
   context.arc(player.x, player.y, player.rad, 0, 2*Math.PI, false);      
   context.fillStyle = playerColor;  
+  context.closePath();
+  context.fill();  
+
+  context.beginPath();
+  context.arc(player.x, player.y, player.rad/1.25, 0, 2*Math.PI, false);      
+  context.fillStyle = "white";  
+  context.closePath();
+  context.fill();
+
+
+  context.beginPath();  
+  context.moveTo(player.x - player.rad/1.5, player.y); // A1
+  
+  context.bezierCurveTo(
+    player.x - player.rad/1.5, player.y - player.rad/2.5, // C1
+    player.x + player.rad/1.5, player.y - player.rad/2.5, // C2
+    
+    player.x + player.rad/1.5, player.y); // A2
+
+  context.bezierCurveTo(
+    player.x + player.rad/1.5, player.y + player.rad/2.5, // C1
+    player.x - player.rad/1.5, player.y + player.rad/2.5, // C2
+    
+    player.x - player.rad/1.5, player.y); //A1
+
+  
+ 
+  context.fillStyle = playerColor;
+  context.fill();
+  context.closePath();  
+
+
+  context.beginPath();
+  context.arc(player.x, player.y, player.rad/2.5, 0, 2*Math.PI, false);      
+  context.fillStyle = "pink";  
+  context.closePath();
+  context.fill();
+
+
+  context.beginPath();
+  context.arc(player.x, player.y, player.rad/2.5, 100, 10, false);      
+  context.fillStyle = "brown"; 
   context.closePath();
   context.fill();  
 }
