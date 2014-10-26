@@ -46,8 +46,8 @@ g_client.addEventListener('die', handleDeath);
 
 var viewportWidth = window.innerWidth;
 var viewportHeight = window.innerHeight;
-var canvasWidth = window.innerWidth - 100;
-var canvasHeight = window.innerHeight - 100;
+var canvasWidth = window.innerWidth - 50;
+var canvasHeight = window.innerHeight - 50;
 
 canvas.style.position = "absolute";
 canvas.setAttribute("width", canvasWidth);
@@ -98,7 +98,7 @@ function createPlayer(){
 
   var centerX = canvas.width/2;
   var centerY = canvas.height/2;
-  var radius = 50;
+  var radius = 25;
   player = {x:centerX, y:centerY, rad:radius};
 
   drawScreen();  
@@ -273,21 +273,17 @@ function drawPlayer(){
     player.x + player.rad/1.5, player.y + player.rad/2.5, // C1
     player.x - player.rad/1.5, player.y + player.rad/2.5, // C2
     
-    player.x - player.rad/1.5, player.y); //A1
-
-  
+    player.x - player.rad/1.5, player.y); //A1  
  
   context.fillStyle = playerColor;
   context.fill();
   context.closePath();  
-
 
   context.beginPath();
   context.arc(player.x, player.y, player.rad/2.5, 0, 2*Math.PI, false);      
   context.fillStyle = "pink";  
   context.closePath();
   context.fill();
-
 
   context.beginPath();
   context.arc(player.x, player.y, player.rad/2.5, 100, 10, false);      
@@ -311,9 +307,9 @@ function drawContour(){
 
   //check screen ratio  
   if (canvas.height < canvas.width){
-    actionMaxRadius =  canvasHeight/2 - ((canvasHeight/100) * 5);
+    actionMaxRadius =  canvasHeight/2 - player.rad;
   } else {
-    actionMaxRadius =  canvasWidth/2  - ((canvasWidth/100) * 5);
+    actionMaxRadius =  canvasWidth/2  - player.rad;
   }
 
   context.beginPath();
