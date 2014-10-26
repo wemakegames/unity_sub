@@ -130,17 +130,24 @@ public class HappyController : MonoBehaviour {
 
 	void OnDrawLine (MessageDrawLine data){
 
-		Vector3 oldStart = new Vector3(data.playerX, 0, -data.playerY);
-		Vector3 oldEnd = new Vector3(data.lineEndX,0, -data.lineEndY);
+		Vector3 rp;
 
-		kickStrenght = data.strength;
-		kickDir = oldEnd - oldStart;
-		kickStart = gameObject.transform.position;
+		if (playerMovement.canPlay) {
+			Vector3 oldStart = new Vector3 (data.playerX, 0, -data.playerY);
+			Vector3 oldEnd = new Vector3 (data.lineEndX, 0, -data.lineEndY);
 
-		Ray r = new Ray(kickStart,kickDir);
-		Vector3 rp = r.GetPoint (data.strength / 6);
-		playerLineRenderer.DrawPlayerLine (rp);
-		//Debug.DrawRay (kickStart, kickDir, Color.black, 0.2f, false);
+			kickStrenght = data.strength;
+			kickDir = oldEnd - oldStart;
+			kickStart = gameObject.transform.position;
+
+			Ray r = new Ray (kickStart, kickDir);
+			rp = r.GetPoint (data.strength / 6);
+		} else {
+			rp = gameObject.transform.position;
+		}
+			playerLineRenderer.DrawPlayerLine (rp);
+			//Debug.DrawRay (kickStart, kickDir, Color.black, 0.2f, false);
+		
 	}
 
 	void OnKick(MessageKick data) {
