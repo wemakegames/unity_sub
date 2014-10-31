@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 
 		gameState = "teamSelection";
-		gameTime = 10.0f;
+		gameTime = 5.0f;
 		timeCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		timeCounter.text = gameTime.ToString();
 
@@ -117,6 +117,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void UpdateTeamScreen(){
+		waitingUIContainer.SetActive(true);
 		waitingTeam1.text = team1.Length.ToString();
 		waitingTeam2.text = team2.Length.ToString();
 	}
@@ -269,9 +270,23 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void FinishGame(){
-		Debug.Log ("GAME FINISHED!");
-	}
 
+		GameObject[] obj;
+		obj = GameObject.FindGameObjectsWithTag("playerTeam1");
+
+		for  (int i = 0; i < obj.Length; i ++){
+			Destroy(obj[i]);
+		}
+
+		obj = GameObject.FindGameObjectsWithTag("playerTeam2");
+		
+		for  (int i = 0; i < obj.Length; i ++){
+			Destroy(obj[i]);
+		}
+		Debug.Log ("GAME FINISHED!");
+		gameState = "teamSelection";
+	}
+	
 	public void ResetAllPlayersPositions(){
 		foreach(GameObject obj in team1) {
 			obj.transform.position = obj.GetComponent<PlayersMovement>().initialPosition;
