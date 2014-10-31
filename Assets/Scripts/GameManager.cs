@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour {
 	public string team1Name = "Cerulean Broncos";
 	public string team2Name = "Lightning Pepperoni";
 
+	private GameObject goalArrowLeft;
+	private GameObject goalArrowRight;
+	private GameObject goalLeft;
+	private GameObject goalRight;
 
 	private int activePlayerIndexTeam1;
 	private int activePlayerIndexTeam2;
@@ -63,7 +67,11 @@ public class GameManager : MonoBehaviour {
 
 		nextTeam = 1;
 
+		goalArrowLeft = GameObject.Find("GoalArrowLeft");
+		goalArrowRight = GameObject.Find("GoalArrowRight");
 
+		goalLeft = GameObject.Find("Goal1");
+		goalRight = GameObject.Find("Goal2");
 	}
 	
 	// Update is called once per frame
@@ -90,10 +98,12 @@ public class GameManager : MonoBehaviour {
 
 			case "team1":
 			CheckEndOfTurn (team1); //checks if active player has played
+			ActivateGoalFeedback(nextTeam);
 			break;
 
 			case "team2":
 			CheckEndOfTurn (team2); //checks if players in active team have playerd or not
+			ActivateGoalFeedback(nextTeam);
 			break;
 		}
 	}
@@ -272,4 +282,35 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	void ActivateGoalFeedback(int team){
+		Color c;
+		switch (team){
+		case 1:
+			c = team1Color;
+			c.a = 0.5f;
+			goalLeft.renderer.material.color = c;
+			goalArrowLeft.renderer.material.color = team1Color;
+			goalArrowLeft.transform.renderer.enabled = true;
+			goalArrowRight.renderer.enabled = false;
+			//inactive goal
+			c = Color.grey;
+			c.a = 0.5f;
+			goalRight.renderer.material.color = c;
+
+			break;
+
+		case 2:
+			c = team2Color;
+			c.a = 0.5f;
+			goalRight.renderer.material.color = c;
+			goalArrowRight.renderer.material.color = team2Color;
+			goalArrowLeft.renderer.enabled = false;
+			goalArrowRight.renderer.enabled = true;
+			//inactive goal
+			c = Color.grey;
+			c.a = 0.5f;
+			goalLeft.renderer.material.color = c;
+			break;
+		}
+	}
 }
