@@ -23,7 +23,10 @@ public class GameManager : MonoBehaviour {
 	private int goalCountRed = 0;
 	private int goalCountBlue = 0;
 
-	private Text turnIndicatorText;
+	private Text timeCounter;
+	private float gameTime;
+	private bool timerActive = false;
+
 	private GameObject turnAnnouncerContainer;
 	private GameObject waitingUIContainer;
 	private Text waitingTeam1;
@@ -47,7 +50,10 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 
 		gameState = "teamSelection";
-		turnIndicatorText = GameObject.Find ("CounterTurnText").GetComponent<Text>();
+		gameTime = 10.0f;
+		timeCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
+		timeCounter.text = gameTime.ToString();
+
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
 		blueCounter = GameObject.Find ("CounterBlueText").GetComponent<Text>();
@@ -106,6 +112,8 @@ public class GameManager : MonoBehaviour {
 			ActivateGoalFeedback(nextTeam);
 			break;
 		}
+
+		UpdateGameTimer();
 	}
 
 	void UpdateTeamScreen(){
@@ -116,7 +124,8 @@ public class GameManager : MonoBehaviour {
 	IEnumerator GameStart(){
 		yield return new WaitForSeconds(2);
 		waitingUIContainer.SetActive(false);
-		StartCoroutine(AnnounceNextTurn());		
+		StartCoroutine(AnnounceNextTurn());
+		timerActive = true;
 	}
 
 	void UpdatePlayerRoster(){
@@ -248,18 +257,19 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void UpdateTurnCounter(int team){
-		switch (team) {
-			case 1:
-			turnIndicatorText.text = "Team 1";
-			turnIndicatorText.color = team1Color;
-			break;
-
-			case 2:
-			turnIndicatorText.text = "Team 2";
-			turnIndicatorText.color = team2Color;
-			break;
+	void UpdateGameTimer(){
+		if (timerActive && gameTime > 0) {
+			gameTime -= Time.deltaTime;
+			timeCounter.text = gameTime.ToString();
+		} else if (gameTime <= 0) {
+			gameTime = 0;
+			timeCounter.text = gameTime.ToString();
+			FinishGame ();
 		}
+	}
+
+	void FinishGame(){
+		Debug.Log ("GAME FINISHED!");
 	}
 
 	public void ResetAllPlayersPositions(){
