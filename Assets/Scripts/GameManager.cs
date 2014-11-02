@@ -50,9 +50,14 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 
 		gameState = "teamSelection";
-		gameTime = 50.0f;
+
+		//SET TIMER DISPLAY
+		gameTime = 120.0f;
 		timeCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
-		timeCounter.text = gameTime.ToString();
+		TimeSpan timeSpan = TimeSpan.FromSeconds(gameTime);
+		string timeText = string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
+		timeCounter.text = timeText;
+		//END TIMER DISPLAY
 
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
@@ -126,7 +131,6 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds(2);
 		waitingUIContainer.SetActive(false);
 		StartCoroutine(AnnounceNextTurn());
-		timerActive = true;
 	}
 
 	void UpdatePlayerRoster(){
@@ -139,9 +143,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator AnnounceNextTurn(){
-		
+
+
 		if (turnAnnouncerContainer.activeSelf == false){
 			yield return new WaitForSeconds(1);
+
 			
 			Color c = Color.white;
 			String t = "";
@@ -155,6 +161,7 @@ public class GameManager : MonoBehaviour {
 				soundManager.PlaySound ("WhistleLong");
 				yield return new WaitForSeconds(2);				
 				turnAnnouncerContainer.SetActive(false);
+				timerActive = true;
 			} else {
 				soundManager.PlaySound ("WhistleShort");
 			}
@@ -261,7 +268,14 @@ public class GameManager : MonoBehaviour {
 	void UpdateGameTimer(){
 		if (timerActive && gameTime > 0) {
 			gameTime -= Time.deltaTime;
-			timeCounter.text = gameTime.ToString();
+
+			TimeSpan timeSpan = TimeSpan.FromSeconds(gameTime);
+			string timeText = string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
+
+			timeCounter.text = timeText;
+
+
+
 		} else if (gameTime <= 0) {
 			gameTime = 0;
 			timeCounter.text = gameTime.ToString();
