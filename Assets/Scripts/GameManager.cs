@@ -220,8 +220,9 @@ public class GameManager : MonoBehaviour {
 		foreach(GameObject obj in playersRoster) {
 			if (obj == activePlayer) {
 				ChangeAlpha(1.0f, obj);
-				activePlayer.GetComponent<PlayersMovement>().canPlay = true;
-				activePlayer.GetComponent<PlayersMovement>().hasPlayed = false;
+				obj.GetComponent<PlayersMovement>().canPlay = true;
+				obj.GetComponent<PlayersMovement>().hasPlayed = false;
+				obj.GetComponent<PlayersMovement>().ChangeTurn(true);
 				ParticleSystem part = obj.GetComponentInChildren<ParticleSystem>();
 				if (nextTeam == 1){
 					part.renderer.material.color = team1Color;
@@ -232,6 +233,7 @@ public class GameManager : MonoBehaviour {
 				part.Play();
 
 			} else {
+				obj.GetComponent<PlayersMovement>().ChangeTurn(false);
 				ChangeAlpha(0.25f, obj);
 				ParticleSystem part = obj.GetComponentInChildren<ParticleSystem>();
 				part.Stop();				

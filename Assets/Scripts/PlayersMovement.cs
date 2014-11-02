@@ -16,10 +16,10 @@ public class PlayersMovement : MonoBehaviour {
 	[CmdName ("myTurn")]
 	private class MessageMyTurn : MessageCmdData {
 
-		public MessageMyTurn(string _turnText) {
-			turnText = _turnText;
+		public MessageMyTurn(bool _turnBool) {
+			myTurn = _turnBool;
 		}		
-		public string turnText;
+		public bool myTurn;
 	};
 
 	void Start () {
@@ -38,13 +38,13 @@ public class PlayersMovement : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {		
+	public void ChangeTurn (bool _turn) {		
 
 		if (_player != null) {
-			if (canPlay && !hasPlayed) {
-				_player.SendCmd (new MessageMyTurn ("MY TURN"));
+			if (canPlay && !hasPlayed & _turn) {
+				_player.SendCmd (new MessageMyTurn (true));
 			} else {
-				_player.SendCmd (new MessageMyTurn ("NOT MY TURN"));
+				_player.SendCmd (new MessageMyTurn (false));
 			}
 		}
 	}

@@ -64,6 +64,8 @@ var dragging;
 var dragHoldX;
 var dragHoldY;
 
+var myTurn = false;
+
 var actionMaxRadius;
 
 ////LISTENERS
@@ -325,11 +327,23 @@ function drawContour(){
 
 function drawScreen() {      
   context.clearRect(0, 0, canvas.width, canvas.height);
-  drawPlayer();
-  drawLine();
+  
+  if (myTurn == true){
+    drawPlayer();
+    drawLine();    
+    var kickStrength = adjustStrengthRatio();  
+    g_client.sendCmd('drawLine',{playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2, strength: kickStrength});
+  
+  } else if (myTurn == false) {
+
+    var imageObj = new Image();
+
+      imageObj.onload = function() {
+        context.drawImage(imageObj, (canvasWidth/2-imageObj.width/2),(canvasHeight/2 - imageObj.height/2));
+      };
+      imageObj.src = 'hft-assets/noplay.png';
+  }
   drawContour();
-  var kickStrength = adjustStrengthRatio();  
-  g_client.sendCmd('drawLine',{playerX: player.x, playerY: player.y, lineEndX: canvas.width/2, lineEndY: canvas.height/2, strength: kickStrength});
 }
 
 function adjustStrengthRatio() {
@@ -367,7 +381,19 @@ function setPlayerColor(data){
 }
 
 function handleTurn(data) {
-  writeMessage(data.turnText)
+  
+  var  turnMsg;
+  if (data.myTurn == true){
+    turnMsg = "MY TURN";    
+    myTurn = true;
+
+  } else {
+    turnMsg = "NOT MY TURN";
+    myTurn = false;
+  }
+  
+  drawScreen();
+  writeMessage(turnMsg)
 }
 
 var sendPad = function(e) {
