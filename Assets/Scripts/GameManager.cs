@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 
 		gameState = "teamSelection";
-		gameTime = 5.0f;
+		gameTime = 50.0f;
 		timeCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		timeCounter.text = gameTime.ToString();
 
@@ -271,19 +271,23 @@ public class GameManager : MonoBehaviour {
 
 	void FinishGame(){
 
-		GameObject[] obj;
-		obj = GameObject.FindGameObjectsWithTag("playerTeam1");
+//
+//
+//		GameObject[] obj;
+//		obj = GameObject.FindGameObjectsWithTag("playerTeam1");
+//
+//		for  (int i = 0; i < obj.Length; i ++){
+//			Destroy(obj[i]);
+//		}
+//
+//		obj = GameObject.FindGameObjectsWithTag("playerTeam2");
+//		
+//		for  (int i = 0; i < obj.Length; i ++){
+//			Destroy(obj[i]);
+//		}
 
-		for  (int i = 0; i < obj.Length; i ++){
-			Destroy(obj[i]);
-		}
+		GetComponent<HappySpawner> ().Cleanup ();
 
-		obj = GameObject.FindGameObjectsWithTag("playerTeam2");
-		
-		for  (int i = 0; i < obj.Length; i ++){
-			Destroy(obj[i]);
-		}
-		Debug.Log ("GAME FINISHED!");
 		gameState = "teamSelection";
 	}
 	

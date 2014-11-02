@@ -46,12 +46,13 @@ g_client.addEventListener('die', handleDeath);
 
 var viewportWidth = window.innerWidth;
 var viewportHeight = window.innerHeight;
-var canvasWidth = window.innerWidth - 50;
+var canvasWidth = window.innerWidth - 150;
 var canvasHeight = window.innerHeight - 50;
 
 canvas.style.position = "absolute";
 canvas.setAttribute("width", canvasWidth);
 canvas.setAttribute("height", canvasHeight);
+canvas.setAttribute("z-index", -99);
 canvas.style.top = (viewportHeight - canvasHeight) / 2 + "px";
 canvas.style.left = (viewportWidth - canvasWidth) / 2 + "px";
 var context = canvas.getContext("2d");

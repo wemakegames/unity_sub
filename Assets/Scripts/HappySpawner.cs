@@ -96,7 +96,7 @@ public class HappySpawner : MonoBehaviour {
 		Application.Quit();
 	}
 	
-	void Cleanup() {
+	public void Cleanup() {
 		if (server != null) {
 			server.Close();
 			server = null;
