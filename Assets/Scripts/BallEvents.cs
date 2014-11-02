@@ -21,10 +21,12 @@ public class BallEvents : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collision) {
 		if (collision.transform.tag == "GoalBlue") {
+			soundManager.PlaySound ("WhistleLong");
 			gameManager.IncreaseGoalCount("IncreaseRed");
 			StartCoroutine (CenterBall ());
 	
 		} else if (collision.transform.tag == "GoalRed") {
+			soundManager.PlaySound ("WhistleLong");
 			gameManager.IncreaseGoalCount("IncreaseBlue");
 			StartCoroutine (CenterBall ());
 		}
@@ -49,7 +51,7 @@ public class BallEvents : MonoBehaviour {
 		if (!ballIsIn) {
 			ballIsIn = !ballIsIn;
 			yield return new WaitForSeconds (2);
-			soundManager.PlaySound ("WhistleLong");
+			soundManager.PlaySound ("WhistleShort");
 			rigidbody.angularVelocity = Vector3.zero;
 			rigidbody.velocity = Vector3.zero;
 			transform.position = new Vector3 (0, 2.5f, 0);		

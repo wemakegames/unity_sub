@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour {
 	private GameObject goalLeft;
 	private GameObject goalRight;
 
+	private GameObject goalDisplay;
+
 	private int activePlayerIndexTeam1;
 	private int activePlayerIndexTeam2;
 	private GameObject activePlayer;
@@ -58,6 +60,8 @@ public class GameManager : MonoBehaviour {
 		string timeText = string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
 		timeCounter.text = timeText;
 		//END TIMER DISPLAY
+
+		goalDisplay = GameObject.Find("GoalDisplay");
 
 		turnAnnouncer = GameObject.Find ("TurnAnnouncerText").GetComponent<Text>();
 		redCounter = GameObject.Find ("CounterRedText").GetComponent<Text>();
@@ -316,12 +320,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void IncreaseGoalCount(string team){
+		StartCoroutine(GoalDisplay());
+
 		if (team == "IncreaseRed") {
 			goalCountRed ++;
 			redCounter.text = "Red: " + goalCountRed;
 		} else if (team == "IncreaseBlue") {
 			goalCountBlue ++;
 			blueCounter.text = "Blue: " + goalCountBlue;
+		}else{
+			//debug
 		}
 	}
 
@@ -355,5 +363,19 @@ public class GameManager : MonoBehaviour {
 			goalLeft.renderer.material.color = c;
 			break;
 		}
+	}
+
+	IEnumerator GoalDisplay(){
+		Vector3 initialPosition = goalDisplay.transform.position;
+		Vector3 newPosition = initialPosition;
+
+		while (newPosition.x < Screen.width/2){
+			newPosition.x += 100;
+			goalDisplay.transform.position = newPosition;
+			yield return 0;
+		}
+		yield return new WaitForSeconds(1);
+		goalDisplay.transform.position = initialPosition;
+
 	}
 }
