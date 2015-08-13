@@ -22,14 +22,13 @@ requirejs(
 
 var globals = {
     debug: false,
+    orientation: "portrait",
   };
 Misc.applyUrlSettings(globals);
 MobileHacks.fixHeightHack();
 
 
-function $(id) {
-  return document.getElementById(id);
-}
+var $ = document.getElementById.bind(document);
 
 console.log( "Create new GameClient" );
 g_client = new GameClient();
@@ -68,16 +67,14 @@ var myTurn = false;
 
 var actionMaxRadius;
 
+CommonUI.setupStandardControllerUI(g_client, globals);
+
 ////LISTENERS
 g_client.addEventListener('setPlayerColor', setPlayerColor);
 g_client.addEventListener('myTurn', handleTurn);
-window.addEventListener("touchstart", handleTouchStart, false);
-window.addEventListener("touchend", handleTouchEnd, false);
-
-window.addEventListener("mousedown",mouseDown,false);
-window.addEventListener("mouseup", mouseUp, false);
-
-
+$("inputarea").addEventListener("pointerdown", handlePointerDown, false);
+$("inputarea").addEventListener("pointerup", handlePointerUp, false);
+$("inputarea").addEventListener("pointermove", handlePointerMove, false);
 
 /////////
 
@@ -109,60 +106,21 @@ function createPlayer(){
 
 
 function getTouchPos(canvas, evt) {
-  var bRect = canvas.getBoundingClientRect();
-    mouseX = (evt.pageX - bRect.left)*(canvas.width/bRect.width);
-    mouseY = (evt.pageY - bRect.top)*(canvas.height/bRect.height);   
-  
-  return {
-    x: mouseX,
-    y: mouseY
-  };
+  return Input.getRelativeCoordinates(canvas, evt);
 }
 
-function getMousePos(canvas, evt) {
-  var bRect = canvas.getBoundingClientRect();
-    mouseX = (evt.clientX - bRect.left)*(canvas.width/bRect.width);
-    mouseY = (evt.clientY - bRect.top)*(canvas.height/bRect.height);
-    
-  return {
-    x: mouseX,
-    y: mouseY
-  };
-}
-
-function mouseDown(evt) {
-  var mousePos = getMousePos(canvas,evt);  
-  if  (hitTest(player, mousePos.x, mousePos.y)) {
+function handlePointerDown(evt) {
+  var mousePos = getTouchPos(canvas, evt);
+  if  (myTurn && hitTest(player, mousePos.x, mousePos.y)) {
     dragging = true;
     dragHoldX = mousePos.x - player.x;
     dragHoldY = mousePos.y - player.y;
-
-  }
-  if (dragging) {
-    window.addEventListener("mousemove", mouseMove, false);
   }
 }
 
-function handleTouchStart(evt) {
-    evt.preventDefault(); //prvent mouse movement
-    var mousePos = getTouchPos(canvas, evt);    
-    if  (hitTest(player, mousePos.x, mousePos.y)) {
-    dragging = true;
-    dragHoldX = mousePos.x - player.x;
-    dragHoldY = mousePos.y - player.y;
-
-  }
-  if (dragging) {
-    window.addEventListener("touchmove", touchMove, false);
-  }
-}
-
-function handleTouchEnd(evt) {
-
-  //evt.preventDefault(); //prvent mouse movement  
+function handlePointerUp(evt) {
   if (dragging){
     dragging = false;
-    //window.removeEventListener("touchmove", touchmove, false);
   }
   
   var mousePos = getTouchPos(canvas,evt);  
@@ -174,23 +132,10 @@ function handleTouchEnd(evt) {
   drawScreen();  
 }
 
-function mouseUp(evt){
-  if (dragging){
-    dragging = false;
-    window.removeEventListener("mousemove", mouseMove, false);
-  } 
-  var mousePos = getMousePos(canvas,evt);
-  g_client.sendCmd('kick');   
-
-  player.x = canvas.width/2;
-  player.y = canvas.height/2;
-
-  drawScreen();
-};
-
-
-function touchMove(evt) {  
-    evt.preventDefault();
+function handlePointerMove(evt) {
+  if (!dragging) {
+    return;
+  }
     var posX;
     var posY;    
     var shapeRad = player.rad
@@ -211,29 +156,6 @@ function touchMove(evt) {
     player.y = posY;
     
 
-    drawScreen();
-  }
-
-function mouseMove(evt) {  
-    var posX;
-    var posY;    
-    var shapeRad = player.rad
-    var minX = shapeRad;
-    var maxX = canvas.width - shapeRad;
-    var minY = shapeRad;
-    var maxY = canvas.height - shapeRad;
-    //getting mouse position correctly 
-    var mousePos = getMousePos(canvas,evt)
-    
-    //clamp x and y positions to prevent object from dragging outside of canvas
-    posX = mousePos.x - dragHoldX;
-    posX = (posX < minX) ? minX : ((posX > maxX) ? maxX : posX);
-    posY = mousePos.y - dragHoldY;
-    posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
-    
-    player.x = posX;
-    player.y = posY;
-    
     drawScreen();
   }
 
@@ -398,11 +320,10 @@ function handleTurn(data) {
   //writeMessage(turnMsg)
 }
 
-var sendPad = function(e) {
+  var sendPad = function(e) {
 
   };
 
-  CommonUI.setupStandardControllerUI(g_client, globals);
 });
 
 
