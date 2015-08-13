@@ -80,7 +80,7 @@ class ExampleSimplePlayer : MonoBehaviour {
 
     private void OnColor(MessageColor data) {
         m_color = CSSParse.Style.ParseCSSColor(data.color);
-        gameObject.renderer.material.color = m_color;
+        gameObject.GetComponent<Renderer>().material.color = m_color;
     }
 
     private void OnMove(MessageMove data) {

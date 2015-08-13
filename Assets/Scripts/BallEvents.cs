@@ -42,7 +42,7 @@ public class BallEvents : MonoBehaviour {
 				i = vF.z;
 			}
 			soundManager.PlaySound ("BallHit");
-			rigidbody.AddForce (new Vector3 (0, i, 0)* 50);
+			GetComponent<Rigidbody>().AddForce (new Vector3 (0, i, 0)* 50);
 			
 		}
 	}
@@ -52,8 +52,8 @@ public class BallEvents : MonoBehaviour {
 			ballIsIn = !ballIsIn;
 			yield return new WaitForSeconds (2);
 			soundManager.PlaySound ("WhistleShort");
-			rigidbody.angularVelocity = Vector3.zero;
-			rigidbody.velocity = Vector3.zero;
+			GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			GetComponent<Rigidbody>().velocity = Vector3.zero;
 			transform.position = new Vector3 (0, 2.5f, 0);		
 			ballIsIn = !ballIsIn;
 

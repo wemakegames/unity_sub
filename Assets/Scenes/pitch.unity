@@ -1553,7 +1553,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Connect to 192.168.1.100:18679
+  m_Text: 'Connect to 192.168.3.31:8080
 
 '
 --- !u!222 &616646688
@@ -5246,7 +5246,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1774450027
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5780,7 +5780,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2073649126
 RectTransform:
   m_ObjectHideFlags: 0

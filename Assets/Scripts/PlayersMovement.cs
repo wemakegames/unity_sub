@@ -53,7 +53,7 @@ public class PlayersMovement : MonoBehaviour {
 		if (canPlay) {
 			canPlay = false;
 			soundManager.PlaySound ("FingerPlay");
-			rigidbody.AddForce(kickDir * ((strength/100) * maxStrength));
+			GetComponent<Rigidbody>().AddForce(kickDir * ((strength/100) * maxStrength));
 			cameraShake.shake = 0.03f;
 			ChangeAlpha(0.25f);
 			hasPlayed = true;
@@ -63,8 +63,8 @@ public class PlayersMovement : MonoBehaviour {
 
 	void ChangeAlpha(float f){
 		Material m;
-		for (var i = 0; i < transform.FindChild("player").renderer.materials.Length; i++) {
-			m = transform.FindChild("player").renderer.materials[i];
+		for (var i = 0; i < transform.FindChild("player").GetComponent<Renderer>().materials.Length; i++) {
+			m = transform.FindChild("player").GetComponent<Renderer>().materials[i];
 			Color c = m.color;
 			c.a = f;
 			m.color = c;

@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour {
 		gameState = "teamSelection";
 
 		//SET TIMER DISPLAY
-		gameTime = 120.0f;
+		gameTime = 1200.0f;
 		timeCounter = GameObject.Find ("CounterTurnText").GetComponent<Text>();
 		TimeSpan timeSpan = TimeSpan.FromSeconds(gameTime);
 		string timeText = string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
@@ -225,9 +225,9 @@ public class GameManager : MonoBehaviour {
 				obj.GetComponent<PlayersMovement>().ChangeTurn(true);
 				ParticleSystem part = obj.GetComponentInChildren<ParticleSystem>();
 				if (nextTeam == 1){
-					part.renderer.material.color = team1Color;
+					part.GetComponent<Renderer>().material.color = team1Color;
 				} else {
-					part.renderer.material.color = team2Color;
+					part.GetComponent<Renderer>().material.color = team2Color;
 				}
 
 				part.Play();
@@ -243,8 +243,8 @@ public class GameManager : MonoBehaviour {
 
 	void ChangeAlpha(float f, GameObject obj){
 		Material m;
-		for (var i = 0; i < obj.transform.FindChild("player").renderer.materials.Length; i++) {
-			m = obj.transform.FindChild("player").renderer.materials [i];
+		for (var i = 0; i < obj.transform.FindChild("player").GetComponent<Renderer>().materials.Length; i++) {
+			m = obj.transform.FindChild("player").GetComponent<Renderer>().materials [i];
 			Color c = m.color;
 			c.a = f;
 			m.color = c;
@@ -341,28 +341,28 @@ public class GameManager : MonoBehaviour {
 		case 1:
 			c = team1Color;
 			c.a = 0.5f;
-			goalLeft.renderer.material.color = c;
-			goalArrowLeft.renderer.material.color = team1Color;
-			goalArrowLeft.transform.renderer.enabled = true;
-			goalArrowRight.renderer.enabled = false;
+			goalLeft.GetComponent<Renderer>().material.color = c;
+			goalArrowLeft.GetComponent<Renderer>().material.color = team1Color;
+			goalArrowLeft.transform.GetComponent<Renderer>().enabled = true;
+			goalArrowRight.GetComponent<Renderer>().enabled = false;
 			//inactive goal
 			c = Color.grey;
 			c.a = 0.5f;
-			goalRight.renderer.material.color = c;
+			goalRight.GetComponent<Renderer>().material.color = c;
 
 			break;
 
 		case 2:
 			c = team2Color;
 			c.a = 0.5f;
-			goalRight.renderer.material.color = c;
-			goalArrowRight.renderer.material.color = team2Color;
-			goalArrowLeft.renderer.enabled = false;
-			goalArrowRight.renderer.enabled = true;
+			goalRight.GetComponent<Renderer>().material.color = c;
+			goalArrowRight.GetComponent<Renderer>().material.color = team2Color;
+			goalArrowLeft.GetComponent<Renderer>().enabled = false;
+			goalArrowRight.GetComponent<Renderer>().enabled = true;
 			//inactive goal
 			c = Color.grey;
 			c.a = 0.5f;
-			goalLeft.renderer.material.color = c;
+			goalLeft.GetComponent<Renderer>().material.color = c;
 			break;
 		}
 	}
