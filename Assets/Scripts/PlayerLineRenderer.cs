@@ -1,53 +1,51 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
-public class PlayerLineRenderer : MonoBehaviour {
+public class PlayerLineRenderer : MonoBehaviour
+{
+    [HideInInspector]
+    public Color c1 = Color.yellow;
 
-	[HideInInspector]
+    public Color c2 = Color.green;
 
-	public Color c1 = Color.yellow;
-	public Color c2 = Color.green;
+    private GameManager gameManager;
+    private int lengthOfLineRenderer = 3;
 
+    private void Start()
+    {
+        LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+        lineRenderer.SetColors(c1, c2);
+        lineRenderer.SetWidth(1.0f, 1.0f);
+        lineRenderer.SetVertexCount(lengthOfLineRenderer);
 
-	private GameManager gameManager;
-	private int lengthOfLineRenderer = 3;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
 
-	void Start() {
+    // Update is called once per frame
+    private void Update()
+    {
+    }
 
-		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-		lineRenderer.SetColors(c1, c2);
-		lineRenderer.SetWidth(1.0f, 1.0f);
-		lineRenderer.SetVertexCount(lengthOfLineRenderer);
+    public void DrawPlayerLine(Vector3 p1, Vector3 p2)
+    {
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
 
-		gameManager = GameObject.Find ("GameManager").GetComponent<GameManager>();
-
-	}
-	
-	// Update is called once per frame
-	void Update(){
-
-	}
-
-	public void DrawPlayerLine (Vector3 p1, Vector3 p2) {
-
-
-		LineRenderer lineRenderer = GetComponent<LineRenderer>();
-
-		if (gameManager.nextTeam == 2){
-			c1 = gameManager.team1Color;
-			c2 = c1;
-		} else {
-			c1 = gameManager.team2Color;
-			c2 = c1;
-		}
-		c2.a = 0f;
-		lineRenderer.SetColors(c1, c1);
-		lineRenderer.SetPosition(0, gameObject.transform.position);
-		lineRenderer.SetPosition(1, p1);
-		lineRenderer.SetColors(c1, c2);
-		lineRenderer.SetPosition(2, p2);
-
-	}
+        if (gameObject.tag == "playerTeam1")
+        {
+            c1 = gameManager.team1Color;
+            c2 = c1;
+        }
+        else
+        {
+            c1 = gameManager.team2Color;
+            c2 = c1;
+        }
+        c2.a = 0f;
+        lineRenderer.SetColors(c1, c1);
+        lineRenderer.SetPosition(0, gameObject.transform.position);
+        lineRenderer.SetPosition(1, p1);
+        lineRenderer.SetColors(c1, c2);
+        lineRenderer.SetPosition(2, p2);
+    }
 }
-
