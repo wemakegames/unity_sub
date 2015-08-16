@@ -63,7 +63,7 @@ var dragging;
 var dragHoldX;
 var dragHoldY;
 
-var myTurn = false;
+var myTurn = true;
 
 var actionMaxRadius;
 

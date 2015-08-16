@@ -22,19 +22,18 @@ public class GameManager : MonoBehaviour
     private GameObject goalDisplay;
 
     private int
-        activePlayerIndexTeam1,
-        activePlayerIndexTeam2,
         goalCountRed = 0,
         goalCountBlue = 0;
 
     private GameObject
-
-        activePlayer,
         turnAnnouncerContainer,
         waitingUIContainer;
 
     private GameObject[]
         playersRoster;
+
+    public float
+        gameTimeInMinutes;
 
     private float
         gameTime;
@@ -78,7 +77,7 @@ public class GameManager : MonoBehaviour
         gameState = state.TEAM_SELECTION;
 
         //SET TIMER DISPLAY
-        gameTime = 1200.0f;
+        gameTime = gameTimeInMinutes * 60;
         timeCounter = GameObject.Find("CounterTurnText").GetComponent<Text>();
         TimeSpan timeSpan = TimeSpan.FromSeconds(gameTime);
         string timeText = string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
@@ -90,9 +89,6 @@ public class GameManager : MonoBehaviour
         soundManager = GetComponent<SoundManager>();
 
         turnAnnouncerContainer.SetActive(false);
-
-        activePlayerIndexTeam1 = 0;
-        activePlayerIndexTeam2 = 0;
     }
 
     private void InitializeGameObjects()
@@ -136,10 +132,9 @@ public class GameManager : MonoBehaviour
                 break;
 
             case state.PLAY:
+                UpdateGameTimer();
                 break;
         }
-
-        UpdateGameTimer();
     }
 
     private void UpdateTeamScreen()
@@ -151,7 +146,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameStart()
     {
-        yield return null;
+        yield return new WaitForSeconds(2);
         waitingUIContainer.SetActive(false);
         StartCoroutine(AnnounceNextTurn());
     }
@@ -160,10 +155,6 @@ public class GameManager : MonoBehaviour
     {
         team1 = GameObject.FindGameObjectsWithTag("playerTeam1");
         team2 = GameObject.FindGameObjectsWithTag("playerTeam2");
-
-        playersRoster = new GameObject[team1.Length + team2.Length];
-        team1.CopyTo(playersRoster, 0);
-        team2.CopyTo(playersRoster, team1.Length);
     }
 
     private IEnumerator AnnounceNextTurn()
@@ -192,6 +183,7 @@ public class GameManager : MonoBehaviour
                 soundManager.PlaySound("WhistleShort");
             }
 
+            ActivatePlayers();
             gameState = state.PLAY;
         }
     }
@@ -213,27 +205,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ActivateNewPlayer()
+    private void ActivatePlayers()
     {
-        foreach (GameObject obj in playersRoster)
+        foreach (GameObject obj in team1)
         {
-            if (obj == activePlayer)
-            {
-                ChangeAlpha(1.0f, obj);
-                obj.GetComponent<PlayersMovement>().canPlay = true;
-                obj.GetComponent<PlayersMovement>().hasPlayed = false;
-                obj.GetComponent<PlayersMovement>().ChangeTurn(true);
-                ParticleSystem part = obj.GetComponentInChildren<ParticleSystem>();
+            ChangeAlpha(1.0f, obj);
+            obj.GetComponent<PlayersMovement>().canPlay = true;
+        }
 
-                part.Play();
-            }
-            else
-            {
-                obj.GetComponent<PlayersMovement>().ChangeTurn(false);
-                ChangeAlpha(0.25f, obj);
-                ParticleSystem part = obj.GetComponentInChildren<ParticleSystem>();
-                part.Stop();
-            }
+        foreach (GameObject obj in team2)
+        {
+            ChangeAlpha(1.0f, obj);
+            obj.GetComponent<PlayersMovement>().canPlay = true;
         }
     }
 
@@ -246,29 +229,6 @@ public class GameManager : MonoBehaviour
             Color c = m.color;
             c.a = f;
             m.color = c;
-        }
-    }
-
-    private void CheckEndOfTurn(GameObject[] team)
-    {   //check if players is still there and if it has played
-        if (team.Length > 0)
-        {
-            bool canPlay = activePlayer.GetComponent<PlayersMovement>().canPlay;
-            bool hasPlayed = activePlayer.GetComponent<PlayersMovement>().hasPlayed;
-
-            if (!canPlay && hasPlayed)
-            {
-                ParticleSystem part = activePlayer.GetComponentInChildren<ParticleSystem>();
-                part.Stop();
-
-                gameState = state.ANNOUNCER;
-                activePlayer.GetComponent<PlayersMovement>().hasPlayed = false;
-                StartCoroutine(AnnounceNextTurn());
-            }
-        }
-        else
-        {
-            Debug.Log("No player in current team :(");
         }
     }
 
@@ -293,8 +253,10 @@ public class GameManager : MonoBehaviour
 
     private void FinishGame()
     {
-        GetComponent<HappySpawner>().Cleanup();
-
+        soundManager.PlaySound("WhistleLong");
+        ResetAllPlayersPositions();
+        ResetGoalCount();
+        ResetTimer();
         gameState = state.TEAM_SELECTION;
     }
 
@@ -325,51 +287,28 @@ public class GameManager : MonoBehaviour
             goalCountBlue++;
             blueCounter.text = "Blue: " + goalCountBlue;
         }
-        else
-        {
-            //debug
-        }
     }
 
-    private void ActivateGoalFeedback(int team)
+    private void ResetGoalCount()
     {
-        Color
-            c;
-        switch (team)
-        {
-            case 1:
-                c = team1Color;
-                c.a = 0.5f;
-                goalLeft.GetComponent<Renderer>().material.color = c;
-                goalArrowLeft.GetComponent<Renderer>().material.color = team1Color;
-                goalArrowLeft.transform.GetComponent<Renderer>().enabled = true;
-                goalArrowRight.GetComponent<Renderer>().enabled = false;
-                //inactive goal
-                c = Color.grey;
-                c.a = 0.5f;
-                goalRight.GetComponent<Renderer>().material.color = c;
+        goalCountRed = 0;
+        redCounter.text = "Red: " + goalCountRed;
 
-                break;
+        goalCountBlue = 0;
+        blueCounter.text = "Blue: " + goalCountBlue;
+    }
 
-            case 2:
-                c = team2Color;
-                c.a = 0.5f;
-                goalRight.GetComponent<Renderer>().material.color = c;
-                goalArrowRight.GetComponent<Renderer>().material.color = team2Color;
-                goalArrowLeft.GetComponent<Renderer>().enabled = false;
-                goalArrowRight.GetComponent<Renderer>().enabled = true;
-                //inactive goal
-                c = Color.grey;
-                c.a = 0.5f;
-                goalLeft.GetComponent<Renderer>().material.color = c;
-                break;
-        }
+    private void ResetTimer()
+    {
+        gameTime = gameTimeInMinutes * 60;
     }
 
     private IEnumerator GoalDisplay()
     {
-        Vector3 initialPosition = goalDisplay.transform.position;
-        Vector3 newPosition = initialPosition;
+        Vector3
+            initialPosition = goalDisplay.transform.position;
+        Vector3
+            newPosition = initialPosition;
 
         while (newPosition.x < Screen.width / 2)
         {
